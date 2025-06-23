@@ -1,0 +1,63 @@
+.codeBlock{
+  font-family:monospace;
+  font-weight:550;
+  padding: 0px 15px;
+  margin-top:20px;
+  padding-bottom:20px;
+}
+
+.inlineCode{
+  font-family:monospace;
+  background-color:#DDD;
+  padding:3px 5px;
+}
+
+#instructions > ol > li {
+  padding-top:10px;
+}
+
+#multipleChoiceContainer{
+  padding-top:1em;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion{
+  padding:1em;
+  height:1em
+  line-height:1.0em;
+}
+#multipleChoiceContainer .multipleChoiceQuestion {
+  border-bottom:1px solid black;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion:last-child {
+  /* border-top:1px solid black; */
+  border-bottom: none;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion:first-child {
+  /* border-top:1px solid black; */
+  border-top: none;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices{
+  height:1.0em;
+  line-height:1.0em;
+  float:right;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices input{
+  margin-right:5px;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices label{
+  padding-right:20px;
+}
+
+#multipleChoiceContainer .multipleChoiceOption input{
+  margin-right:10px;
+}
+
+#multipleChoiceContainer .multipleChoiceOption label{
+  padding-left:20px;
+  font-weight:normal;
+}

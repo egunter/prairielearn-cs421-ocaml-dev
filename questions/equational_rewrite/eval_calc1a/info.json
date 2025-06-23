@@ -1,0 +1,30 @@
+{
+    "uuid": "8402b2aa-8a44-4805-b8f2-81509a7df859",
+    "title": "Formal Stepwise Evaluation, eval_calc1a",
+    "topic": "Functional Programming",
+    "tags": ["evaluationorder", "ocaml"],
+    "type": "v3",
+    "singleVariant": true,
+    "workspaceOptions": {
+        "comment": "based on codercom/code-server:3.11.1",
+        "image": "echuber2/workspace-ocaml-20231018-official:latest",
+        "port": 8080,
+        "args": "--auth none",
+        "home": "/home/coder/workspace",
+        "gradedFiles": [
+            "eval_calc1a.ml",
+            "grade_report.txt"
+        ],
+        "syncIgnore": [
+            ".local/share/code-server/"
+            ]
+    },
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/shared/ocaml-grader/run_grader.sh"
+    }
+}

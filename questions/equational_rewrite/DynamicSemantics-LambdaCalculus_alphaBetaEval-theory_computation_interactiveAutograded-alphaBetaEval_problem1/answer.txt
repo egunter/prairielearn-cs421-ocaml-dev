@@ -1,0 +1,23 @@
+(% x. x (% y. x y)) (% z. (% v. (% w. (z w) (w v) y))) ((% u. u u)(%w. w))
+
+=a= (% x. x (% t. x t)) (% z. (% v. (% w. (z w) (w v) y))) ((% u. u u)(%w. w))
+
+-B-> (% z. (% v. (% w. (z w) (w v) y))) (% t. (% z. (% v. (% w. (z w) (w v) y))) t) ((% u. u u)(%w. w))
+
+-B-> (% v. (% w. ( (% t. (% z. (% v. (% w. (z w) (w v) y))) t) w) (w v) y)) ((% u. u u)(%w. w))
+
+-B-> (% v. (% w. ( (% t. (% z. (% v. (% w. (z w) (w v) y))) t) w) (w v) y)) ((%w. w) (%w. w))
+
+-B-> (% v. (% w. ( (% t. (% z. (% v. (% w. (z w) (w v) y))) t) w) (w v) y)) (%w. w)
+
+-B-> (% w. ( (% t. (% z. (% v. (% w. (z w) (w v) y))) t) w) (w  (%w. w)) y)
+
+-B-> (% w. ( (% z. (% v. (% w. (z w) (w v) y))) w) (w  (%w. w)) y)
+
+=a=  (% w. ( (% z. (% v. (% r. (z r) (r v) y))) w) (w  (%w. w)) y)
+
+-B-> (% w. (% v. (% r. (w r) (r   v          ) y)) (w  (%w. w)) y)
+
+-B-> (% w.       (% r. (w r) (r  (w  (%w. w))) y)               y)
+
+-B-> (% w.             (w y) (y  (w  (%w. w))) y                 )

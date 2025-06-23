@@ -1,0 +1,264 @@
+/*************************************
+ * Default Stylesheet for PrairieLearn
+ * v1.3.1: Merge question.html styles
+ * v1.3: Add tt
+ * v1.2.1: Fix support for TFText
+ * v1.2: Added support for proof trees
+ *
+ * Written by Terence Nip
+ *************************************/
+
+/*****************************
+ * General
+ *****************************/
+
+.codeBlock{
+  font-family:monospace;
+  font-weight:550;
+  padding: 0px 15px 1em 0em;
+  margin-top:20px;
+}
+
+.inlineCode{
+  font-family:monospace;
+  background-color:#DDD;
+  padding:3px 5px;
+}
+
+.tt{
+  font-family:monospace;
+  padding:3px 5px;
+}
+
+#instructions > ol > li {
+  padding-top:10px;
+}
+
+/*****************************
+ * MC
+ *****************************/
+
+#multipleChoiceContainer{
+  padding-top:0.75em;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion{
+  padding:1em;
+  height:1em
+  line-height:1.0em;
+}
+#multipleChoiceContainer .multipleChoiceQuestion {
+  border-bottom:1px solid black;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion:last-child {
+  /* border-top:1px solid black; */
+  border-bottom: none;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion:first-child {
+  /* border-top:1px solid black; */
+  border-top: none;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices{
+  height:1.0em;
+  line-height:1.0em;
+  float:right;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices input{
+  margin-right:5px;
+}
+
+#multipleChoiceContainer .multipleChoiceQuestion .choices label{
+  padding-right:20px;
+}
+
+/*****************************
+ * MC With Text
+ *****************************/
+
+#multipleChoiceTextContainer{
+  padding-top:0.75em;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion{
+  padding:1em;
+  border-bottom:1px solid black;
+  clear:all;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion:last-child {
+  /* border-top:1px solid black; */
+  border-bottom: none;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion:first-child {
+  /* border-top:1px solid black; */
+  border-top: none;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion .choices{
+  line-height:1.0em;
+  margin:1.0em 0em 1.0em 0em;
+  width:100%;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion .choices input[type=text]{
+  clear:all;
+  border:1px solid black;
+  padding-right:2em;
+  margin-top:1em;
+  width:95%;
+  background-color:#FFF;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion .choices input[type=text].disabled{
+  background-color:#CCC;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion .choices input[type=checkbox]{
+  margin-right:1em;
+}
+
+#multipleChoiceTextContainer .multipleChoiceQuestion .choices label{
+  padding-right:4em;
+}
+
+/*****************************
+ * Proof Trees: Appearance
+ *****************************/
+
+#proofTreeContainer{
+   margin: 0;
+   margin:auto;
+   margin-top:3em;
+   text-align:center;
+   padding: 0;
+   width:99%;
+}
+
+.proofTreeLine {
+  margin:0;
+  padding:2em 0em 2.75em 0em;
+  border-top:2px solid black;
+  text-align:center;
+  margin-bottom:2px;
+  width:auto;
+}
+
+.proofTreeNest {
+  text-align:left;
+  margin:auto;
+}
+
+.proofTreeLabel {
+  font-size:0.75em;
+  position:relative;
+  left:0.5em;
+  text-align:left;
+  float:left;
+}
+.l0 {
+  width:100%;
+  margin:0;
+  margin:auto;
+  padding: 0.4em 0.75em 0.4em 0.25em;
+}
+
+/*****************************
+ * Proof Trees: Drawing
+ *****************************/
+
+/* General Modal Stuff for Proof Tree */
+#proofTreeModal {
+  width:75%;
+  background-color:#CCC;
+  z-index:750;
+  margin:0;
+  margin:auto;
+  overflow:auto;
+  padding:2em;
+
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px; /* future proofing */
+
+
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#proofTreeModalContainer {
+  width:100%;
+  background: rgba(48, 48, 48, .75);
+  z-index:500;
+  margin:0;
+  position:absolute;
+  font-size:1.05em;
+  display:none;
+}
+
+/* Modal for Full-Screen View */
+.proofTreeView {
+  width:95%;
+  height:85%;
+  background-color:#CCC;
+  z-index:750;
+  margin:0;
+  margin:auto;
+  overflow:auto;
+  padding:2em;
+  text-align:center;
+
+  -moz-border-radius: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px; /* future proofing */
+
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#proofTreeViewModal {
+  height:100%;
+}
+
+#proofTreeModalLabel {
+  margin-top:0.5em;
+  font-size:1.1em;
+}
+
+.proofTreeLabel select{
+  margin-top:0.5em;
+  border:2px solid black;
+}
+
+
+/* Add/Edit/Delete */
+.proofTreeActions{
+  float:right;
+  position:relative;
+  right:0em;
+  top: 0.25em;
+  font-size:1em;
+  font-weight:bold;
+}
+
+.proofTreeAddSubproof {
+  display:table-cell;
+  text-align:center;
+  vertical-align:middle;
+  width:auto;
+  padding:0px 3px;
+  font-weight:bold;
+  float:right;
+  margin-top:-2em;
+}
+
+#proofTreeButtons {
+  text-align:center;
+}
+

@@ -1,0 +1,22 @@
+{
+    "uuid": "955da6af-5b29-4b43-85b3-f41f5991c246",
+    "title": "Alpha-Beta Evaluation, problem 1",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "submission.html"
+    ],
+    "tags": ["WA"],
+    "topic": "Lambda Calculus",
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/shared/ocaml-grader/run_grader.sh"
+    }
+}

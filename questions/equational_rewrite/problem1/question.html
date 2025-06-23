@@ -1,0 +1,126 @@
+<div id="instructions">
+  <p>Welcome to the Picoml Unification Tester!</p>
+
+  <p>
+    In the following, you will be given a unification problem that is a
+    set of equations. You will be asked to incrementally apply the rules
+    of the unification algorithm, in order to solve for a most general
+    unifier of the set of equations.
+  </p>
+  <p>
+    Lowercase marked letters <span style="font-family: monospace;">('a, 'b, 'c, 'd, 'e)</span> denote variables of unification.
+    The upper-case letters <span style="font-family: monospace;">(F, L, N, P, S)</span> are constants or term constructors.
+    F and P have arity 2 &mdash; i.e., take 2 arguments. L has arity 1, and
+    N and S have arity 0 &mdash; i.e., they are constants.
+  </p>
+  <p>
+    Here is a worked example showing the syntax you should use to enter your work.
+    The problem is:</p>
+  <p style="font-family: monospace;">
+    Unify {('b = F(N,S)), (P('a,'c) = P('c,'b))}
+  </p>
+  <p>
+    The steps of one way of working the problem are:
+  </p>
+  <p style="font-family: monospace;">
+= Unify {(P('a,'c) = P('c,F(N,S))} o {'b -&gt; F(N,S)} by Eliminate on ('b = F(N,S))<br/>
+= Unify { ('a = 'c) , ('c = F(N,S)) } o {'b -&gt; F(N,S)} by Decompose on (P('a,'c) = P('c,F(N,S))<br/>
+= Unify { ('c = F(N,S)) } o {'a -&gt; 'c} o {'b -&gt; F(N,S)} by Eliminate on ('a = 'c)<br/>
+= Unify {} o {'c -&gt; F(N,S)} o {'a -&gt; 'c} o {'b -&gt; F(N,S)} by Eliminate on ('c = F(N,S))<br/>
+<!--
+= Unify {} o {'c -&gt; F(N,S), 'a -&gt; F(N,S)} o {'b -&gt; F(N,S)}<br/>
+= Unify {} o {'c -&gt; F(N,S), 'a -&gt; F(N,S), 'b -&gt; F(N,S)}<br/>
+-->
+= {'c -&gt; F(N,S), 'a -&gt; F(N,S), 'b -&gt; F(N,S)}
+  </p>
+  <p>
+    Remember that the algorithm, as given in class is
+    non-deterministic, so the path you choose to a solution
+    may well differ significantly.
+  <p>
+    Each line you enter is of one of three forms:
+    <ul>
+      <li>
+        <span style="font-family: monospace;"> Unify {</span>
+        <it>equations</it>
+        <span style="font-family: monospace;">} by </span>
+        <emph>Rule</emph>
+        <span style="font-family: monospace;"> on </span>
+        <it>equation</it> if the given rule succeeds for the given equation
+      </li>
+      <li>
+        <span style="font-family: monospace;"> Fail by </span>
+        <it>Rule</it>
+        <span style="font-family: monospace;"> on </span>
+        <it>equation</it> if the given rule fails for the given equation
+      </li>
+      <li>
+        A single simultaneous substitution if you have successfully
+        reached the empty problem
+        <span style="font-family: monospace;">Unify {}</span>
+      </li>
+    </ul>
+
+  <p>
+    You must use the "by Rule on (equation)" syntax for each
+    unification step.  You can compose substitutions all at the end or
+    as you go, but there are these restrictions in the autograder:
+    <ul>
+    <li>"Maps-to" arrows are represented as "<span style="font-family: monospace;">-&gt;</span>"</li>
+    <li>A single equation for the system of equations is entered using
+    the equals sign, "<span style="font-family:
+    monospace;">=</span>", with the equation wrapped in parentheses,</li>
+    <li>Within a simultaneous substitution set, individual mappings are separated by comma, "<span style="font-family: monospace;">,</span>"</li>
+    <li>Separate substitution sets that are to be composed can be
+    written with the composition operator, a lowercase
+    "<span style="font-family: monospace;">o</span>"</li>
+    <li>Each line in the solution, except the last must include  the
+    "by Rule on (equation)" syntax, where Rule is one of
+      <span style="font-family: monospace;">Delete</span>,
+      <span style="font-family: monospace;">Decompose</span>,
+      <span style="font-family: monospace;">Orient</span>, or
+      <span style="font-family: monospace;">Eliminate</span>,
+    <li>You must include the <span style="font-family:
+    monospace;">Unify {}</span> on your second-to-last line, if your
+    unification problem has not failed. <!--Don't remove this
+    recursive reference to unification until the very end.-->
+    </li>
+    <li>Your final result line of a successful unification must not
+    have <span style="font-family: monospace;">Unify {}</span> nor any
+    remaining composition operators; it should only have the one
+    simultaneous substitution that is your unification result.</li>
+    </ul>
+  </p>
+</div>
+<p><b> You should enter one single step at a time, each starting
+    with <tt>=</tt>, in the editor box below, and click Check before
+    proceding to the next step.  The work from your previous step is
+    left to facilitate your endtering the next step, but you should
+    remove it or edit it when you enter the next step.  When you have
+    entered and checked all steps, you should press the Save & Grade button.
+    Do not press the Save & Grade button before you have entered all the
+    steps you wish to have graded, as you will not be able to return
+    to this work afterwards.
+</b></p>
+<div id="history" style="font-family: monospace; margin-bottom: 10px"></div>
+
+<div id="actions">
+  <textarea id="answer" col="60" rows="6" type="text" class="form-control"></textarea>
+  <button id="check">Check</button>
+  </div>
+
+<!--
+<div id="cite">
+<hr />
+<p>Please attempt the problems above and enter citations
+  below <em>before</em> clicking Save & Grade! If you have no
+  citations to declare, write "none" to complete the form. To fully
+  complete the problem at the end of your work you must click Save & Grade.</p>
+<p>
+<em>In doing this problem, in addition to this semester's course material,
+ I received help from:</em>
+</p>
+<textarea id="citation" col="60" rows="6" required="true" placeholder="List all collaborations and citations here" class="form-control" data-instavalue="submittedAnswer.cite">
+</textarea>
+</div>
+-->

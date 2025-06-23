@@ -1,0 +1,27 @@
+
+ (genutils.ml)
+'a parsed: ParseOk / ParseEmpty / SyntaxError - how parse errors are initially stored
+
+ (interface.ml)
+term_parse_error: JudgeParse / JudgeErr - parse errors collected together as pre-processing term errors
+term_parse_error_list: JParseList / JErrList - similar, but for the list of subterms, and we don't keep error information
+
+ (gencheck.ml)
+term_match_error: .. / TParseError / TSubParseError - parse errors stored as general term errors
+
+ (interface.ml)
+node_error: NodeErr - list of term_match_errors for final result
+
+
+grade
+--calling test_result
+----first it will attempt to reconstruct the tree, which should just work
+----next it will call check_tree [#still in 'a parsed format#]
+------check_tree will unilaterally attempt to transform the judgment + sub-terms
+ + side-condition into working terms
+--------for each term, it will check if the parts have been parsed okay
+--------if any of them have not, it will return a list of the errors [#parsed_term format#]
+------if the main judgment or side-condition has errors, it will turn them into a [#term_match_error#]
+------if the subterms have errors, we return an emotion-less subterm parse error [#term list option#] ==> [#term_match_error#]
+------in these cases, it will wrap the errors into a [#node_error#]
+------otherwise it will call the general checker

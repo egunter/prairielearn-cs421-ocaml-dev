@@ -1,0 +1,25 @@
+{
+    "uuid": "c0cf788f-cc8a-46d5-af59-a23449914aea",
+    "title": "Transition Semantics, jtrans1, autograded",
+    "tags": ["WA"],
+    "topic": "Typing and Type Systems",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "prooftreeDraw.js",
+        "style.css",
+        "TransitionSemantics.pdf",
+        "submission.html"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/serverFilesCourse/ocaml-grader/run_grader.sh"
+    }
+}

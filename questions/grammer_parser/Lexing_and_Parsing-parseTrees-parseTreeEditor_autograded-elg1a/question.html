@@ -1,0 +1,170 @@
+<style type="text/css">
+  #viewportContainer {
+    width:800px;
+      margin:auto;
+  }
+
+  #viewport {
+    width:100%;
+    height:1500px;
+    margin:auto;
+    border:1px solid black;
+    position:relative;
+  }
+
+  #viewportButtons {
+    padding:1em;
+    text-align:center;
+  }
+
+  #viewportButtons button {
+    padding:0.5em;
+    margin:1em;
+  }
+
+  .node {
+    position:absolute;
+    width:100px;
+    float:left;
+    border:1px solid black;
+    font-size:1em;
+    font-family:Verdana;
+    padding:5px;
+    background-color:white;
+    height:2.25em;
+    z-index:999;
+  }
+
+  .selected {
+    border:3px solid red;
+  }
+
+  .selectedDeleteEdge{
+    border:3px solid blue;
+  }
+
+  #serializedTree {
+    width:100%;
+    display:none;
+  }
+
+  .viewportMessage {
+    border:1px solid black;
+    width:100%;
+    background-color:#EEE;
+    padding:5px;
+  }
+
+  #viewportNoTree input[type=checkbox] {
+    border:1px solid black;
+    height:1em;
+    width:1em;
+  }
+</style>
+
+<link type="text/css" rel="stylesheet" href="<% print(questionFile('style.css')) %>" />
+
+<h4>Instructions</h4>
+<p>Using the tool below and the grammar provided, draw a parse tree for the
+following string if one exists. Otherwise, check the box labeled, "There is no
+parse tree for this string.".</p>
+
+<p>Note that checking the box labeled, "There is no parse tree for this string."
+supercedes any parse tree drawn.</p>
+
+<p>After you have clicked "Save and Grade", please make sure to refresh the page before submitting again. If you do not refresh the page, you will not see the autograder's feedback and your next submission will not be saved.</p>
+
+<ul>
+  <li>Drawing Nodes</li>
+  <ul>
+    <li><strong>Creating a node</strong>: Double-click on a blank spot in the
+      canvas.</li>
+    <li><strong>Deleting a node</strong>: Click on a node to select it, then
+      press the "Delete Node" button. Note that deleting a node will delete that
+    node and all associated edges.</li>
+  </ul>
+  <li>Drawing Edges</li>
+  <ul>
+    <li><strong>Creating an edge</strong>: Click on a node to select it, then
+      shift-click (press the SHIFT key, then click) on the node you want to
+      create an edge between.</li>
+    <li><strong>Deleting an edge</strong>: Click on an edge.</li>
+  </ul>
+</ul>
+
+<script type="text/javascript">
+/* MODIFY BELOW THIS LINE */
+
+var alphabet = "{0, 1, p, n, %}";       // "{ ... }"
+var startNonTerm = "T";    // "T"
+var stringToParse = "1 n n";   // "a 1 c"
+
+/* MODIFY ABOVE THIS LINE */
+
+$('#alphabet').text(alphabet);
+$('.startNonTerm').text(startNonTerm).css('padding', '0');
+$('#stringToParse').text(stringToParse).css('font-size', '1.15em');
+$('#grammar').css('font-size', '1.05em');
+
+</script>
+
+<h4>Problem</h4>
+<p>Consider the following BNF grammar over the alphabet
+<span class="tt" id="alphabet"></span>:</p>
+
+<div style="text-align:center;padding:1.5em;">
+<div class="tt" id="grammar"
+  style="display: inline-block;margin:auto; text-align:left;">
+  T &nbsp;&nbsp;::= p E | T n | 0 | 1<br />
+  E &nbsp;&nbsp;&nbsp;::= S % T | S<br />
+  S &nbsp;&nbsp;&nbsp;&nbsp;::= 0 | 1
+
+</div>
+</div>
+
+
+<p>Give a parse for the following string if it parses starting with
+<span class="tt startNonTerm"></span>, or check the box labeled,
+"There is no parse tree for this string" if it does not parse starting
+with <span class="tt startNonTerm"></span>.
+
+<p class="inlineCode" id="stringToParse" style="text-align:center;"></p>
+<br />
+
+<input type="text" id="serializedTree" data-instavalue="submittedAnswer.serializedTree" ></input><br /><br />
+<div id="viewportContainer">
+  <div class="viewportMessage" id="viewportTree" style="border-bottom:none;">
+    <strong>There is a parse tree for this string, and it is the
+      following:</strong>
+  </div>
+  <div id="viewport">
+  </div>
+  <div id="viewportButtons">
+    <button type="button" id="deleteNode">Delete Node</input>
+  </div>
+  <div class="viewportMessage" id="viewportNoTree">
+    <strong>There is no parse tree for this string:</strong>
+    <input type="checkbox" id="noProofTreeBox"
+    data-checkedoptional="submittedAnswer.noProofTree" />
+  </div>
+</div>
+
+<script id="parsetreejs" src="<% print(questionFile('parseTreeDraw.js')) %>?v=a"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  window.setTimeout(function() {
+    deserialize();
+  }, 100);
+});
+
+  var milliseconds = function () {
+    return (new Date).getTime();
+  }
+
+  var boundaries = {};
+
+  // Actual computer science!
+  var nodes = [];
+  var adjMatrix = {};
+</script>

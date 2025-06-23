@@ -1,0 +1,30 @@
+{
+    "uuid": "36562810-c94c-46d0-88d9-97af91aae4e2",
+    "title": "CPS Transformation Calculation, cps_trans1a",
+    "topic": "Functional Programming",
+    "tags": ["cps", "ocaml"],
+    "type": "v3",
+    "singleVariant": true,
+    "workspaceOptions": {
+        "comment": "based on codercom/code-server:3.11.1",
+        "image": "echuber2/workspace-ocaml-20231018-official:latest",
+        "port": 8080,
+        "args": "--auth none",
+        "home": "/home/coder/workspace",
+        "gradedFiles": [
+            "cps_trans1a.ml",
+            "grade_report.txt"
+        ],
+        "syncIgnore": [
+            ".local/share/code-server/"
+            ]
+    },
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/shared/ocaml-grader/run_grader.sh"
+    }
+}

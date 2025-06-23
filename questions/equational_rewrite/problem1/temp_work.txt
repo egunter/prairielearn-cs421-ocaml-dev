@@ -1,0 +1,8 @@
+Unify {('b = F(N,S), (P('a,'c) = P('c,'b))}
+= Unify {(P('a,'c) = P('c,F(N,S))} o {'b -> F(N,S)} by Eliminate on ('b = F(N,S)))
+= Unify { ('a = 'c) , ('c = F(N,S)) } o {'b -> F(N,S)} by Decompose on (P('a,'c) = P('c,F(N,S)))
+= Unify { ('c = F(N,S)) } o {'a -> 'c} o {'b -> F(N,S)} by Eliminate on ('a = 'c)
+= Unify {} o {'c -> F(N,S)} o {'a -> 'c} o {'b -> F(N,S)} by Eliminate on ('c = F(N,S))
+= Unify {} o {'c -> F(N,S), 'a -> F(N,S)} o {'b -> F(N,S)}
+= Unify {} o {'c -> F(N,S), 'a -> F(N,S), 'b -> F(N,S)}
+= {'c -> F(N,S), 'a -> F(N,S), 'b -> F(N,S)}

@@ -1,0 +1,24 @@
+{
+    "uuid":"174ffb79-afa0-406f-b373-7884ec467ed9",
+    "title": "Lexing and Parsing, parse trees, elg1a",
+    "tags": ["WA"],
+    "topic": "Lexing and Parsing",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "submission.html",
+        "parseTreeDraw.js",
+        "style.css"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/shared/ocaml-grader/run_grader.sh"
+    }
+}

@@ -1,0 +1,88 @@
+<div id="instructions">
+  <p>Welcome to the Lambda Calculus AlphaBeta Evaluation Tester!</p>
+
+  <p>
+    In the following, you will be given a lambda term and you will be
+    asked to incrementally apply the rules of <b>alphaBeta evaluation</b>
+    to full normal form (where no beta reductions are possible, even
+    after using $\alpha$-equivalence).
+  </p>
+  <p>
+    The lambda ($\lambda$) in lambda terms is represented using the
+    percent symbol (%). Variables must begin with an alphabetic
+    character (upper or lower case), but then may additionally be
+    followed by other alphabetics, numerics (0-9) and prime (').  Any
+    term or subterm may be wrapped in parentheses.  Application binds
+    more tightly than abstraction and associates to the left.
+  </p>
+  <p>
+    Here is a worked example showing the syntax you should use to
+    enter your work.  The starting lambda term is is:</p>
+  <p style="font-family: monospace;">
+    (% x. x (% y. x y))((% u. u)(% w. y w))<br/>
+  </p>
+  <p>
+    The steps of one way of working the problem are:
+  </p>
+  <p style="font-family: monospace;">
+    (% x. x (% y. x y))((% u. u)(% w. y w))<br/>
+    -B-> (% x. x (% y. x y)) (% w. y w)<br/>
+    =a= (% x. x (% z. x z)) (% w. y w)<br/>
+    -B-> (% w. y w) (% z. (% w. y w) z)<br/>
+    -B-> y (% z. (% w. y w) z)<br/>
+    -B-> y (% z. y z)<br/>
+  </p>
+  <p>
+    <b>
+      In doing the problem below, every step must be entered separately, pushing the
+      Check button after each individual step.
+    </b>
+  </p>
+  <p>
+    Each line you enter is of one of two forms:
+    <ul>
+      <li>
+        <span style="font-family: monospace;"> =a= </span>
+        <it>term</it>$\quad$ if the given step is an $\alpha$-equivalence.
+        You may apply $\alpha$-equivalence as any step.  There may be
+        instances in which it is necessary.  Using
+        $\alpha$-equivalence will not directly gain you points,
+        although doing it incorrectly will count as an error.
+      </li>
+      <li>
+        <span style="font-family: monospace;"> -B-> </span>
+        <it>term</it>$\quad$
+        if the given step is a $\beta$-reduction compatible with the
+        definition of <b>$\alpha\beta$-evaluation</b>.
+      </li>
+      <li>
+        Your final term should be one that can not be reduced by
+        $\beta$-reduction any further, even after swapping the term for
+        one that is $\alpha$-equivalent.
+      </li>
+    </ul>
+    <b>You must enter one step at a time and you need to click Check
+    after each step you enter.</b>
+  </p>
+</div>
+
+<div id="history" style="font-family: monospace; margin-bottom: 10px"></div>
+
+<div id="actions">
+	<textarea id="answer" col="60" rows="6" type="text" class="form-control" ></textarea>
+  <button id="check">Check</button>
+  </div>
+
+<div id="cite">
+<hr />
+<p>Please attempt the problems above and enter citations
+below <em>before</em> clicking save or Grade! If you have no
+citations to declare, write "none" to complete the form.</p>
+<p>
+<em>In doing this problem, in addition to this semester's course material,
+ I received help from:</em>
+</p>
+<textarea id="citation" col="60" rows="6" required="true" placeholder="List all collaborations and citations here" class="form-control" data-instavalue="submittedAnswer.cite">
+</textarea>
+</div>
+

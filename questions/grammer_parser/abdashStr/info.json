@@ -1,0 +1,34 @@
+{
+    "uuid": "344d3b12-c060-4f27-92d2-edc99906faa0",
+    "title": "Regular Expressions and Regular Grammars, abdashStr",
+    "topic": "Lexing and Parsing",
+    "tags": ["WA"],
+    "clientFiles":
+    [
+        "question.html",
+        "answer.html"
+    ],
+    "type": "v3",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/serverFilesCourse/ocaml-grader/run_grader.sh"
+    },
+  "workspaceOptions": {
+    "comment": "based on codercom/code-server:3.11.1",
+    "image": "echuber2/workspace-ocaml-20231018-official:latest",
+    "port": 8080,
+    "args": "--auth none",
+    "home": "/home/coder/workspace",
+    "gradedFiles": [
+      "abdashStr_regexp", "abdashStr_rrg"
+    ],
+    "syncIgnore": [
+      ".local/share/code-server/"
+    ]
+  }
+}

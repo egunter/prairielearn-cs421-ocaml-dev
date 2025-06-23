@@ -1,0 +1,26 @@
+{
+    "uuid": "c567f543-6c4d-4828-9b46-5ae09eb46dbc",
+    "title": "Hoare Logic, simp1a-elg, autograded",
+    "tags": ["WA"],
+    "topic": "Dynamic Semantics",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "prooftreeDraw.js",
+        "style.css",
+        "HoareLogic.pdf",
+        "shon.png",
+        "submission.html"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/serverFilesCourse/ocaml-grader/run_grader.sh"
+    }
+}

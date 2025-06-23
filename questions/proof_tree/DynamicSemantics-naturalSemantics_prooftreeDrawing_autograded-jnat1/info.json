@@ -1,0 +1,25 @@
+{
+    "uuid": "e5ef4f93-37e3-48c4-8aff-f402d9124c0d",
+    "title": "Natural Semantics, jnat1, autograded",
+    "tags": ["WA"],
+    "topic": "Dynamic Semantics",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "prooftreeDraw.js",
+        "style.css",
+        "NaturalSemantics.pdf",
+        "submission.html"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/serverFilesCourse/ocaml-grader/run_grader.sh"
+    }
+}

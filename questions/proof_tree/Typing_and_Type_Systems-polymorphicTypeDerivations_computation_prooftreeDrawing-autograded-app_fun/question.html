@@ -1,0 +1,220 @@
+<link type="text/css" rel="stylesheet" href="<% print(questionFile('style.css')) %>" />
+<script type="text/javascript" src="<% print(questionFile('prooftreeDraw.js')) %>?id=polyTyDeriv"></script>
+<style type="text/css">
+  #serializedTree {
+    width:100%;
+    display:none;
+  }
+</style>
+
+<!-- BEGIN Question Statement -->
+<script type="text/javascript">
+/* MODIFY BELOW THIS LINE */
+  var leftSeparator = "vdash";
+  var rightSeparator = ": ";
+  var baseStatementLeft = "{y : int}";
+  var baseStatementMiddle = "(fun x -> x + y) (~ 5)";
+  var baseStatementRight = "int";
+/* MODIFY ABOVE THIS LINE */
+
+  $(document).ready(function() {
+    $('#baseStatementLeft').text(baseStatementLeft);
+    $('#baseStatementMiddle').text(baseStatementMiddle);
+    $('#baseStatementRight').text(baseStatementRight);
+  });
+</script>
+
+
+<!-- BEGIN Question Statement -->
+<h4>Instructions</h4>
+<div id="instructions">
+  <p>
+    Complete the type derivation below. For this type derivation, if the "for
+    all" operator ($\forall$) needs to be used, please use <span
+     class="inlineCode">ALL</span>.  Use a comma as the separator
+    between entries in environemnts.
+  </p>
+  <p>
+    To use the tool below:
+    <ul>
+      <li><strong>[+]</strong> adds a subproof above the line to the selected
+        inference.</li>
+      <li><strong>[e]</strong> allows you to edit the selected
+        inference.</li>
+      <li><strong>[x]</strong> deletes the selected inference
+        <strong>and</strong> its subtrees.</li>
+      <li><strong>[sc]</strong> allows you to add a side condition to the
+        selected inference.</li>
+    </ul>
+  </p>
+  <p>
+  You may find the polymorphic type derivation rules by
+  <a href="<% print(questionFile('poly-rules.pdf')) %>">going here</a>.
+  </p>
+  <br />
+  <p> The following is an example of the kind a tree you are expected to
+    construct.
+  </p>
+
+  <p style="text-align:center;"><img src="<% print(questionFile('extree.png'))
+%>" width="75%" height="75%"/></p>
+<p>
+    Please note that every inference is labeled with the rule of which
+    it is an instance.  Use the drop-down menu in the tool to select
+    the appropriate label.  When you click on [+], you will be given
+    three boxes, one for each part of a type judgment.  You should
+    enter only one type judgment per click of [+].  If your inference
+    requires more than one antecedent, you may repeatedly click on the
+    [+] on the line of the inference to add more antecedents.  Rules
+    utilizing polymorphism have side coditions [sc] expressing how the
+    bound variables of the polymorphic type are specialized to derive
+    the instance monomorphic type. You should use the [sc] button to
+    give these instances.  Examples of this are in the boxes in the
+    example derivation above.  Please use the same syntax of the word
+    Instance, followed by a colon (:), followed by a substitution
+    stating how each bound variable is instantiated with a monomorphic
+    type to arrive at the desired instance type.  Again, the comma
+    should be used as the separator between entries in a simultaneous
+    substitution. 
+    </p>
+</div>
+
+<h4>Problem</h4>
+
+<input type="text" id="serializedTree"
+data-instavalue="submittedAnswer.serializedTree" style="display:none;"/>
+
+<div class="proofTreeView" style="display:none;">
+  <button id="proofTreeViewModalClose">Close Window</button>
+</div>
+
+<div class="proofTreeForm" style="display:none;">
+  <div class="proofTreeNest l0">
+    <div class="proofTreeNest l1">
+      <div class="proofTreeLine" style="border:none;">
+        <input type="text" id="proofTreeModalAnsLeft" style="width:25%;">
+        <span class="leftSeparator"></span>
+        <input type="text" id="proofTreeModalAnsRight" style="width:25%;">
+<!--        <span class="conditionText">, optionally where</span> -->
+        <span class="conditionText"> : </span>
+        <input type="text" id="proofTreeModalAnsCondition" style="width:25%;">
+      </div>
+    </div>
+    <div class="proofTreeLabel" id="proofTreeModalLabel"></div>
+    <div class="proofTreeLine">
+      <span id="proofTreeModalLeft" class="tt">
+      </span>
+      <span class="leftSeparator"></span>
+      <span id="proofTreeModalRight" class="tt">
+      </span>
+      <!--      <span class="proofTreeLineConditionPhrase"></span> -->
+              <span class="conditionText"> : </span>
+      <span id="proofTreeModalCondition" class="tt">
+      </span>
+    </div>
+    <div id="proofTreeButtons">
+      <button type="button" id="proofTreeButtonSave" nextLevel="1" parentId="root-l0a" class="btn btn-primary">
+        Save Inference
+      </button>
+      <button type="button" id="proofTreeButtonEdit" nextLevel="1" parentId="root-l0a" currentId="root-l0a-l1a" class="btn btn-primary">
+        Save Edits to Inference
+      </button>
+      <button type="button" id="proofTreeButtonCancel" class="btn btn-danger">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<style type="text/css">
+  .proofTreeSideCondition {
+    float:left;
+    position:relative;
+    margin-top:-2em;
+    width:50%;
+    border:1px solid black;
+    display:none;
+  }
+</style>
+
+<div id="proofTreeContainer">
+  <div id="root-l0a" class="proofTreeNest l0">
+    <div class="proofTreeAddSubproof">
+      <a href="#" currLevel="0" class="addSubproof">[+]</a>
+      <span class="proofTreeSideConditionLink">
+        | <a href="#" class="addSideCondition">[sc]</a>
+      </span>
+    </div>
+    <div class="proofTreeActions">
+      <!--<a href="#" currLevel="0" class="addSubproof">[+]</a>-->
+    </div>
+    <input type="text" class="proofTreeSideCondition"
+      placeholder="Side Condition" />
+    <div class="proofTreeLabel">
+      <select class="proofTreeDropdownLabel">
+        <option selected></option>
+        <option name="const">Const</option>
+        <option name="var">Var</option>
+        <option name="monop">MonOp</option>
+        <option name="binop">BinOp</option>
+        <option name="if">If</option>
+        <option name="app">App</option>
+        <option name="fun">Fun</option>
+        <option name="let">Let</option>
+        <option name="letrec">LetRec</option>
+      </select>
+    </div>
+    <div class="proofTreeLine">
+      <span id="baseStatementLeft" class="proofTreeLineLeft tt">
+      <!--{y : int}-->
+      </span><br />
+      <span class="leftSeparator"></span>
+      <span id="baseStatementMiddle" class="proofTreeLineRight tt">
+       <!--(fun x -> x + y) (~ 5)-->
+      </span>
+      <!--      <span class="proofTreeLineConditionPhrase"></span> -->
+      <span class="conditionText"> : </span><br />
+      <span id="baseStatementRight" class="proofTreeLineCondition tt">
+      <!-- int -->
+      </span>
+    </div>
+  </div>
+</div>
+
+<div id="modalButtons" style="text-align:center;">
+  <button id="proofTreeViewModalOpen">View Larger Version</button>
+</div>
+
+<script type="text/javascript">
+var unmarshalled = false;
+
+$(document).ready(function() {
+  window.setTimeout(function() {
+    unmarshal();
+  }, 100);
+
+
+});
+</script>
+
+<script type="text/javascript">
+       var assessmentType = "final";
+       var assessmentNumber = "";
+       var fullQuestionName = "Typing_and_Type_Systems-polymorphicTypeDerivations_computation_prooftreeDrawing-autograded-app_fun";
+       var questionName = "app_fun";
+       var untarDirName = assessmentType + assessmentNumber + "-" + questionName;
+       var extraCredit = false;
+</script>
+
+<!-- END Question Statement -->
+
+<!-- JS -->
+<script type="text/javascript">
+  var base = "/backend/cs421fa2015/";
+  if (window.location.hostname === "localhost") {
+    base = "";
+  }
+
+  var leftSeparator = "vdash";
+  giveWidths($('#proofTreeContainer').children(), 'root', 0);
+</script>

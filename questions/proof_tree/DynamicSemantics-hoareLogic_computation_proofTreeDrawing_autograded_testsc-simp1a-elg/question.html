@@ -1,0 +1,230 @@
+<link type="text/css" rel="stylesheet" href="<% print(questionFile('style.css')) %>" />
+<script type="text/javascript" src="<% print(questionFile('prooftreeDraw.js')) %>?id=nat"></script>
+<style type="text/css">
+  #serializedTree {
+    width:100%;
+    display:none;
+  }
+</style>
+
+<!-- BEGIN Question Statement -->
+<script type="text/javascript">
+/* MODIFY BELOW THIS LINE */
+  var leftSeparator = "\}";
+  var rightSeparator = "\{";
+  var leftEnd = "\{";
+  var rightEnd = "\}";
+  var baseStatementLeft = "a = 9 & b = 13";
+  var baseStatementMiddle = "a := a + b; b := a - b";
+  var baseStatementRight = "b = 9";
+/* MODIFY ABOVE THIS LINE */
+
+  $(document).ready(function() {
+    $('#baseStatementLeft').text(baseStatementLeft);
+    $('#baseStatementMiddle').text(baseStatementMiddle);
+    $('#baseStatementRight').text(baseStatementRight);
+  });
+</script>
+
+
+<!-- BEGIN Question Statement -->
+<h4>Instructions</h4>
+<div id="instructions">
+  <p>
+    Prove the given statement using Hoare Logic
+  </p>
+  <p>
+    To use the tool below:
+    <ul>
+      <li><strong>[+]</strong> adds a subproof above the line to the selected
+        inference.</li>
+      <li><strong>[e]</strong> allows you to edit the selected
+        inference.</li>
+      <li><strong>[x]</strong> deletes the selected inference
+        <strong>and</strong> its subtrees.</li>
+      <li><strong>[sc]</strong> allows you to add a side condition to the
+        selected inference.</li>
+    </ul>
+  </p>
+  <p>
+  You may find the rules of Floyd-Hoare logic by
+  <a href="<% print(questionFile('HoareLogic.pdf')) %>">going here</a>.
+  </p>
+  <br />
+ <!-- <p> The following is an example of the kind a tree you are expected to
+    construct.
+  </p>
+
+  <p style="text-align:center;"><img src="<% print(questionFile('extree.png'))
+%>" width="75%" height="75%"/></p>-->
+<p>
+    Please note that every inference is labeled with the rule of which
+    it is an instance.  Use the drop-down menu in the tool to select
+    the appropriate label. 
+
+    When you click on [+], you will be given two boxes: the left is the term to be reduced, and the right is what it reduces to. You should enter only one reduction per click of [+]. If your proof requires more than one antecedent, you must repeatedly click on the [+] on the line of the inference to add more antecedents. 
+
+    Various rules
+    have side coditions [sc] expressing implication between two statements.
+     You should use the [sc] button to
+    give these instances.  The logical connectives are as follows:
+    $$\small\begin{array}{|l|l|}
+    \hline
+    \textbf{Symbol}&\textbf{Meaning}\\\hline
+    \texttt{true}&\textrm{true}\\\hline
+    \texttt{false}&\textrm{false}\\\hline
+    \texttt{&}&\textrm{and}\\\hline
+    \texttt{or}&\textrm{or}\\\hline
+    \texttt{-->}&\textrm{implies}\\\hline
+    \end{array}$$
+
+    Given is an example of the syntax for the side condition.
+<p style="text-align:center;"><img src="<% print(questionFile('shon.png'))
+%>" width="50%" height="50%"/></p>
+</div>
+<b>Note:</b> All variables in this problem are integer valued.
+<br/><br/>
+<h4>Problem</h4>
+
+<input type="text" id="serializedTree"
+data-instavalue="submittedAnswer.serializedTree" style="display:none;"/>
+
+<div class="proofTreeView" style="display:none;">
+  <button id="proofTreeViewModalClose">Close Window</button>
+</div>
+
+<div class="proofTreeForm" style="display:none;">
+  <div class="proofTreeNest l0">
+    <div class="proofTreeNest l1">
+      <div class="proofTreeLine" style="border:none;">
+        <span class="leftEnd"></span>
+        <input type="text" id="proofTreeModalAnsLeft" style="width:25%;">
+        <span class="leftSeparator"></span>
+        <input type="text" id="proofTreeModalAnsRight" style="width:25%;">
+<!--        <span class="conditionText">, optionally where</span> -->
+        <!--<span class="conditionText"> : </span>-->
+        <span class="rightSeparator"></span>
+        <input type="text" id="proofTreeModalAnsCondition" style="width:25%;">
+        <span class="rightEnd"></span>
+      </div>
+    </div>
+    <div class="proofTreeLabel" id="proofTreeModalLabel"></div>
+    <div class="proofTreeLine">
+      <span class="leftEnd"></span>
+      <span id="proofTreeModalLeft" class="tt">
+      </span>
+      <span class="leftSeparator"></span><br/>
+      <span id="proofTreeModalRight" class="tt">
+      </span><br/>
+      <span class="rightSeparator"></span>
+      <!--      <span class="proofTreeLineConditionPhrase"></span> -->
+  <!--            <span class="conditionText"> : </span>-->
+      <span id="proofTreeModalCondition" class="tt">
+      </span>
+      <span class="rightEnd"></span>
+    </div>
+    <div id="proofTreeButtons">
+      <button type="button" id="proofTreeButtonSave" nextLevel="1" parentId="root-l0a" class="btn btn-primary">
+        Save Inference
+      </button>
+      <button type="button" id="proofTreeButtonEdit" nextLevel="1" parentId="root-l0a" currentId="root-l0a-l1a" class="btn btn-primary">
+        Save Edits to Inference
+      </button>
+      <button type="button" id="proofTreeButtonCancel" class="btn btn-danger">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
+<style type="text/css">
+  .proofTreeSideCondition {
+    float:left;
+    position:relative;
+    margin-top:-2em;
+    width:50%;
+    border:1px solid black;
+    display:none;
+  }
+</style>
+
+<div id="proofTreeContainer">
+  <div id="root-l0a" class="proofTreeNest l0">
+    <div class="proofTreeAddSubproof">
+      <a href="#" currLevel="0" class="addSubproof">[+]</a>
+      <span class="proofTreeSideConditionLink">
+        | <a href="#" class="addSideCondition">[sc]</a>
+      </span>
+    </div>
+    <div class="proofTreeActions">
+      <!--<a href="#" currLevel="0" class="addSubproof">[+]</a>-->
+    </div>
+    <input type="text" class="proofTreeSideCondition"
+      placeholder="Side Condition" />
+    <div class="proofTreeLabel">
+      <select class="proofTreeDropdownLabel">
+        <option selected></option>
+        <option name="assign">Assign</option>
+        <option name="seq">Seq</option>
+        <option name="if">IfThenElse</option>
+        <option name="while">While</option>
+        <option name="preStr">PreStr</option>
+        <option name="postWeak">PostWeak</option>
+      </select>
+    </div>
+    <div class="proofTreeLine">
+      <span class="leftEnd"></span>
+      <span id="baseStatementLeft" class="proofTreeLineLeft tt">
+      <!--{y : int}-->
+      </span>
+      <span class="leftSeparator"></span>
+      <span id="baseStatementMiddle" class="proofTreeLineRight tt">
+       <!--(fun x -> x + y) (~ 5)-->
+      </span>
+      <!--      <span class="proofTreeLineConditionPhrase"></span> -->
+      <!--<span class="conditionText"> : </span><br />-->
+      <span class="rightSeparator"></span>
+      <span id="baseStatementRight" class="proofTreeLineCondition tt">
+      <!-- int -->
+      </span>
+      <span class="rightEnd"></span>
+    </div>
+  </div>
+</div>
+
+<div id="modalButtons" style="text-align:center;">
+  <button id="proofTreeViewModalOpen">View Larger Version</button>
+</div>
+
+<script type="text/javascript">
+var unmarshalled = false;
+
+$(document).ready(function() {
+  window.setTimeout(function() {
+    unmarshal();
+  }, 100);
+
+
+});
+</script>
+
+<script type="text/javascript">
+       var assessmentType = "final";
+       var assessmentNumber = "";
+       var fullQuestionName = "DynamicSemantics-hoareLogic_computation_proofTreeDrawing_autograded-simp1a-elg";
+       var questionName = "hoare_logic_problem";
+       var untarDirName = assessmentType + assessmentNumber + "-" + questionName;
+       var extraCredit = false;
+</script>
+
+<!-- END Question Statement -->
+
+<!-- JS -->
+<script type="text/javascript">
+  var base = "/backend/cs421fa2015/";
+  if (window.location.hostname === "localhost") {
+    base = "";
+  }
+
+  giveWidths($('#proofTreeContainer').children(), 'root', 0);
+</script>

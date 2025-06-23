@@ -1,0 +1,8 @@
+#load "rrg.cmo";;
+#load "rrgparse.cmo";;
+#load "rrglex.cmo";;
+#load "student.cmo";;
+#load "solution.cmo";;
+#load "rrgGrader.cmo";;
+open Rrg;;
+open RrgGrader;;

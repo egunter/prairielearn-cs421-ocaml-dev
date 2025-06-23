@@ -1,0 +1,24 @@
+{
+    "uuid": "09bcf126-a814-4f65-afea-5b377e618ad1",
+    "title": "Unification Problem, Computation",
+    "topic": "Typing and Type Systems",
+    "tags":
+    ["unification",
+     "WA"],
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "submission.html"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/shared/ocaml-grader/run_grader.sh"
+    }
+}

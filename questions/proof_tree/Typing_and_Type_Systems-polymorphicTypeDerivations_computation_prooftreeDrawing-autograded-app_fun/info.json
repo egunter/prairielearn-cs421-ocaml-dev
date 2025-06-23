@@ -1,0 +1,26 @@
+{
+    "uuid": "c87b908d-2cee-4ef5-aad4-12e293d5fc56",
+    "title": "Polymorphic Type Deriviation, app_fun, autograded",
+    "tags": ["WA"],
+    "topic": "Typing and Type Systems",
+    "clientFiles": [
+        "client.js",
+        "question.html",
+        "answer.html",
+        "prooftreeDraw.js",
+        "style.css",
+        "extree.png",
+        "poly-rules.pdf",
+        "submission.html"
+    ],
+    "type": "Calculation",
+    "singleVariant": true,
+    "gradingMethod": "External",
+    "externalGradingOptions":
+    {
+        "enabled": true,
+        "image": "prairielearn/centos7-ocaml",
+        "serverFilesCourse": ["ocaml-grader/"],
+        "entrypoint": "/grade/serverFilesCourse/ocaml-grader/run_grader.sh"
+    }
+}

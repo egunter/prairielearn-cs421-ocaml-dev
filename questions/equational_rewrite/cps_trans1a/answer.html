@@ -1,0 +1,32 @@
+<pre>
+[[ if x > 2 then 3 else x + 3]] _k
+
+=> [[x > 2]] FN b -> IF b THEN [[3]] _k ELSE [[x + 3]] _k.
+
+=> [[x > 2]] FN b -> IF b THEN _k 3 ELSE [[x + 3]] _k.
+
+=> [[2]](FN two -> [[x]](FN xx -> (FN b -> IF b THEN _k 3 ELSE [[x + 3]] _k)(xx > two))).
+
+=> (FN two -> [[x]](FN xx -> (FN b -> IF b THEN _k 3 ELSE [[x + 3]] _k)(xx > two))) 2.
+
+=> (FN two -> (FN xx -> (FN b -> IF b THEN _k 3 ELSE [[x + 3]] _k)(xx > two)) x) 2.
+
+=> (FN two ->
+    (FN xx ->
+     (FN b ->
+      IF b THEN _k 3
+      ELSE [[3]] (FN three -> [[x]] (FN xxx -> _k (xxx + three)))
+      )(xx > two)) x) 2.
+
+=> (FN two ->
+    (FN xx ->
+     (FN b ->
+      IF b THEN _k 3
+      ELSE [[3]] (FN three -> (FN xxx -> _k (xxx + three)) x))(xx > two)) x) 2.
+
+=> (FN two ->
+    (FN xx ->
+     (FN b ->
+      IF b THEN _k 3
+      ELSE (FN three -> (FN xxx -> _k (xxx + three)) x) 3) (xx > two)) x) 2.
+</pre>

@@ -1,0 +1,34 @@
+Unify {(F('a,F('b,'b)) = F(P('c,L('c)), F(P('e,L('d)),P('c,'f)))), (P(L(P(N,'d)),'c) = P(L('a),'c))}
+
+= Unify {('a = P('c,L('c))), (F('b,'b) =  F(P('e,L('d)),P('c,'f))),  (P(L(P(N,'d)),'c) = P(L('a),'c))} by Decompose on (F('a,F('b,'b)) = F(P('c,L('c)), F(P('e,L('d)),P('c,'f))))
+
+= Unify {(F('b,'b) = F(P('e,L('d)),P('c,'f))),  (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'a -> P('c,L('c))} by Eliminate on ('a = P('c,L('c)))
+
+= Unify {('b = P('e,L('d))), ('b = P('c,'f)), (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'a -> P('c,L('c))} by Decompose on (F('b,'b) = F(P('e,L('d)),P('c,'f)))
+
+= Unify {(P('e,L('d)) = P('c,'f)), (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'b -> P('e,L('d))} o {'a -> P('c,L('c))} by Eliminate on ('b = P('e,L('d)))
+
+= Unify {('e = 'c), (L('d) = 'f), (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'b -> P('e,L('d))} o {'a -> P('c,L('c))} by Decompose on (P('e,L('d)) = P('c,'f))
+
+= Unify {(L('d) = 'f), (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Eliminate on ('e = 'c)
+
+= Unify {('f = L('d)), (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Orient on (L('d) = 'f)
+
+= Unify {(P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))} o {'f -> L('d)} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Eliminate on ('f = L('d))
+
+= Unify {(L(P(N,'d)) = L( P('c,L('c)))),('c = 'c)} o {'f -> L('d)} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Decompose on (P(L(P(N,'d)),'c) = P(L( P('c,L('c))),'c))
+
+= Unify {(P(N,'d) = P('c,L('c))),('c = 'c)} o {'f -> L('d)} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Decompose on (L(P(N,'d)) = L(P('c,L('c))))
+
+= Unify {(N = 'c), ('d = L('c)), ('c = 'c)} o {'f -> L('d)} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Decompose on (P(N,'d) = P('c,L('c)))
+
+= Unify {('c = N), ('d = L('c)), ('c = 'c)} o {'f -> L('d)} o {'e -> 'c} o {'b -> P('c,L('d))} o {'a -> P('c,L('c))} by Orient on (N = 'c)
+
+= Unify {('d = L(N)), (N = N)} o {'c -> N} o {'f -> L('d)} o {'e -> N} o {'b -> P(N,L('d))} o {'a -> P(N,L(N))} by Eliminate on ('c = N)
+
+= Unify {(N = N)} o {'d -> L(N)} o {'c -> N} o {'f -> L(L(N))} o {'e -> N} o {'b -> P(N,L(L(N)))} o {'a -> P(N,L(N))} by Eliminate on ('d = L(N))
+
+= Unify {} o {'d -> L(N)} o {'c -> N} o {'f -> L(L(N))} o {'e -> N} o {'b -> P(N,L(L(N)))} o {'a -> P(N,L(N))} by Delete on (N = N)
+
+= {'d -> L(N), 'c -> N, 'f -> L(L(N)), 'e -> N, 'b -> P(N,L(L(N))), 'a -> P(N,L(N))}
+

@@ -1,0 +1,72 @@
+\documentclass{article}
+\begin{document}
+
+$$\hspace*{-1.5in}
+\begin{array}{c}
+  \begin{array}[b]{c}
+    \hspace*{-.2in}\mbox{Var}\;\rule[2pt]{.5in}{1pt}\\
+    \{\texttt{x\,:\,'a}\}\vdash\\ \texttt{x\,:\,'a}\\
+  \mbox{Fun}\;\rule[2pt]{.8in}{1pt}\\
+  \{\,\}\vdash \texttt{fun x -> x}\\
+  \texttt{\quad:\,'a -> 'a}
+  \end{array}%\quad
+  \hspace*{-2em}
+  \begin{array}[b]{c}\hspace*{-2em}
+    \begin{array}[b]{c}
+    \fbox{\hspace*{-1.7ex}\begin{tabular}{l}Instance:\\
+        $\{\texttt{'a -> bool}\}$\end{tabular}\hspace*{-1.7ex}}\\
+    \hspace*{-.2in}\mbox{Var}\;\rule[2pt]{1in}{1pt}\\
+    \{\texttt{id\,:\,ALL 'a.}\\
+    \texttt{'a -> 'a}\}\vdash\\
+    \texttt{id\,:\,bool -> bool}
+  \end{array}%\qquad
+  \begin{array}[b]{c}
+    \fbox{\hspace*{-1.7ex}\begin{tabular}[b]{l}Instance:\\
+        $\{\texttt{'a -> int}\}$\\\end{tabular}\hspace*{-1.7ex}}
+    \;\;
+    \begin{array}[b]{c}
+      \hspace*{-.35in}\mbox{Const}\;\rule[2pt]{.8in}{1pt}\\
+      \{\texttt{id\,:\,ALL 'a.}\\
+      \texttt{\,'a -> 'a}\}\vdash\\
+      \texttt{3\,:\,int}\\[-1.5ex]
+    \end{array}
+    \quad
+\begin{array}[b]{c}
+               \begin{array}[b]{c}
+                 \fbox{\hspace*{-.8em}\begin{tabular}{l}Instance:\\
+                     $\{\texttt{'a -> int}\}$\end{tabular}\hspace*{-.8em}}\\
+                 \hspace*{-.2in}\mbox{Var}\rule[2pt]{.8in}{1pt}\\
+                  \{\texttt{id\,:\,ALL 'a.}\\\texttt{'a -> 'a}\}\vdash\\
+                  \texttt{id\,:\,int -> int}
+               \end{array}\quad\;\;
+               \begin{array}[b]{c}
+                 \hspace*{-.3in}\mbox{Const}\rule[2pt]{.85in}{1pt}\\
+                 \{\texttt{id\,:\,ALL 'a.}\\
+                 \texttt{'a -> 'a}\}\vdash\\
+                  \texttt{2\,:\,int}
+               \end{array}\\
+               \hspace*{-.2in}\mbox{App}\;\rule[2pt]{2.35in}{1pt}\\
+               \{\texttt{id\,:\,ALL 'a.\,'a -> 'a}\}\vdash
+               \texttt{id 2\,:\,int}\\[-1.5ex]
+           \end{array}
+ %% \begin{array}[b]{c}
+ %% \{\texttt{id\,:\,ALL 'a.\,'a -> 'a}\}\vdash\\
+ %% \texttt{id 2)\,:\,int}
+ %% \end{array}
+    \\
+    %\hspace*{-.5in}
+    \mbox{BinOp}\;\rule[2pt]{4.25in}{1pt}\\
+    \{\texttt{id\,:\,ALL 'a.\,'a -> 'a}\}\vdash
+    \texttt{(3 = id 2)\,:\,bool}\\
+  \end{array}
+  \\
+\qquad \mbox{App}\;\rule[2pt]{5.75in}{1pt}\rule[2pt]{1in}{0pt}\\
+  \{\texttt{id\,:\,ALL 'a.\,'a -> 'a}\}\vdash
+  \texttt{id (3 = id 2)\,:\,bool}\\
+  \end{array}\\
+    \hspace*{-.75in}\mbox{Let}\;\rule[2pt]{7.25in}{1pt}\\
+\{\,\}\vdash\texttt{let id = fun x -> x in id (3 = id 2) : bool}
+\end{array}
+$$
+
+\end{document}

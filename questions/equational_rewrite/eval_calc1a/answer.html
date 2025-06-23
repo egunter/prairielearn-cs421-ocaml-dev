@@ -1,0 +1,15 @@
+<pre>
+Eval(if x > 2 then 3 else x + 3, {x -> 1})
+=> Eval(if Eval(x > 2, {x -> 1}) then 3 else x + 3, {x -> 1})
+=> Eval(if Eval(x > (Eval(2, {x -> 1})), {x -> 1}) then 3 else x + 3, {x -> 1})
+=> Eval(if Eval(x > (Val 2), {x -> 1}) then 3 else x + 3, {x -> 1})
+=> Eval(if Eval((Eval(x, {x -> 1})) > (Val 2), {x -> 1}) then 3 else x + 3, {x -> 1})
+=> Eval(if Eval((Val 1) > (Val 2), {x -> 1}) then 3 else x + 3, {x -> 1})
+=> Eval(if Val false then 3 else x + 3, {x -> 1})
+=> Eval(x + 3, {x -> 1})
+=> Eval(x + (Eval(3, {x -> 1})), {x -> 1})
+=> Eval(x + (Val 3), {x -> 1})
+=> Eval((Eval(x, {x -> 1})) + (Val 3), {x -> 1})
+=> Eval((Val 1) + (Val 3), {x -> 1})
+=> Val 4
+</pre>

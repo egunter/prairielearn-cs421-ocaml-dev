@@ -1,0 +1,54 @@
+<pl-question-panel>
+<h1>Regular Expressions and Right Regular Grammars, <tt>abdashStr</tt></h1>
+<p>Welcome to the Regular Expression and Right Regular Grammar Tester!</p>
+<p>
+  The purpose of this question is to help the student master
+    expressing a regular language given by an English language
+    description with:
+  <ul>
+    <li>a regular expression</li>
+    <li>a regular language</li>
+  </ul>
+  <pl-workspace></pl-workspace>
+</p>
+
+{{{params.regex_rrg_instructions}}}
+
+<!-- BEGIN Question Statement -->
+<h4>Problem</h4>
+
+<p>
+    Consider the set of all strings over the alphabet $\{\ a,\;
+    b,\;-,\; ; \; \}$ that represent non-empty sequences of semicolon
+    separated dash-surrounded non-empty strings of $a$'s and $b$'s.  A
+    dash-surrounded non-empty string of $a$'s and $b$'s begins with a
+    dash ($-$), followed by a non-zero length sequence of $a$'s and
+    $b$'s, terminated by another dash.  Such strings are separated by
+    semicolons but there is no semicolon following the last such
+    string.
+</p>
+
+<p>
+    For example, $-aababb-;-babaaba-;-a-$ follows the desired pattern;
+    $--;-a-$ and $-aaba-;$ do not.  
+</p>
+
+<ul>
+  <li>
+    In the file <tt>abdashStr_regexp</tt>, replace the placeholder text with a regular expression,
+    conformant with the syntax restrictions given at the top of this question, describing the set of strings as given above.
+  </li>
+</ul>
+<ul>
+  <li>
+    In the file <tt>abdashStr_rrg</tt>, replace the placeholder text with a (right) regular grammar describing the same set of strings.
+  </li>
+</ul>
+
+</pl-question-panel>
+
+<pl-submission-panel>
+  <pl-file-preview> </pl-file-preview>
+  <pl-external-grader-results> </pl-external-grader-results>
+</pl-submission-panel>
+
