@@ -1,0 +1,25 @@
+<div class="problem">
+<p>Add <code>let_in_</code> and <code>let_rec_in</code>.</p>
+<pre><code>&gt; let rec f x = 3 :: x :: (f x) in f 8;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = let rec f x = 3  ::  (x  ::  (f x)) in f 8 : {}
+  |--{} |= let rec f x = 3  ::  (x  ::  (f x)) in f 8 : int list
+    |--{x : int, f : int -&gt; int list} |= 3  ::  (x  ::  (f x)) : int list
+    | |--{x : int, f : int -&gt; int list} |= 3 : int
+    | |--{x : int, f : int -&gt; int list} |= x  ::  (f x) : int list
+    |   |--{x : int, f : int -&gt; int list} |= x : int
+    |   |--{x : int, f : int -&gt; int list} |= f x : int list
+    |     |--{x : int, f : int -&gt; int list} |= f : int -&gt; int list
+    |     |--{x : int, f : int -&gt; int list} |= x : int
+    |--{f : int -&gt; int list} |= f 8 : int list
+      |--{f : int -&gt; int list} |= f : int -&gt; int list
+      |--{f : int -&gt; int list} |= 8 : int
+</code></pre>
+</div>

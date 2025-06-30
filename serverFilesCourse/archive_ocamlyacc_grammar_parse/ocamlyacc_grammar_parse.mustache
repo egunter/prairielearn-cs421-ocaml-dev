@@ -1,0 +1,370 @@
+<h1 id="overview">Overview</h1>
+<details><summary>Overview of the Assignment Framework</summary>
+<p>In this assignment, we will deal with the process of converting PicoML code into an abstract syntax tree using a parser. We will use the <em>ocamlyacc</em> tool to generate our parser from a description of the grammar. This parser will be combined with the lexer and type inferencer from previous assignments to make an interactive PicoML interpreter (well, it does not interpret yet), where you can type in PicoML expressions and see a proof tree of the expression’s type:</p>
+<pre><code>Welcome to the Student parser</code></pre>
+<pre><code>&gt; let x = 5;;
+val x : int
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let x = 5 : {x : int}
+  |--{} |= 5 : int
+</code></pre>
+<p>To complete this assignment, you will need to be familiar with describing languages with BNF grammars, adding attributes to return computations resulting from the parse, and expressing these attribute grammars in a form acceptable as input to <em>ocamlyacc</em>.</p>
+</details>
+<h1 id="given-files">Given Files</h1>
+<details><summary>Files Specific to This Assignment in the Workspace</summary>
+<div class="description">
+<p><span><strong>parse.mly:</strong></span> You should modify the file <span><strong>parse.mly</strong></span>. You will be given slices of this file touching on most of the difficulties embodied in this assignment, but with far few constructs and strata. The skeleton contains some pieces of code that we have started for you, with triple dots indicating places where you should add code.</p>
+<p><span><strong>picomlIntPar.ml:</strong></span> This file contains the main body of the PicoML executable. It essentially connects your lexer, parser, and type inference code and provides a friendly prompt to enter PicoML expressions.</p>
+<p><span><strong>picomllex.mll:</strong></span> This file contains the ocamllex specification for the lexer. It is a modest expansion to the lexer you wrote for the previous assignment.</p>
+<p><span><strong>common.ml:</strong></span> This file includes the types of expressions and declarations. It also contains the type inferencing code. Appropriate code from this file will automatically be called by the interactive loop defined in <span><strong>picomlIntPar.ml</strong></span>. You will want to use the types defined in this file, and probably some of the functions, when you are creating your attributes in <strong>parse.mly</strong>.</p>
+</div>
+</details>
+<h1 id="overview-of-ocamlyacc">Overview of <code>ocamlyacc</code></h1>
+<details><summary>What an <code>ocamlyacc</code> File Looks Like, and How to Think About It</summary>
+<p>Take a look at the given <span><strong>parse.mly</strong></span> file. The grammar specification has a similar layout to the lexer specification of the previous assignment. It begins with a header section (where you can add raw OCaml code), then has a section for directives (these start with a <code>%</code> character), then has a section that describes the grammar (this is the part after <code>%%</code>). You will only need to add to the last section.</p>
+<h2 id="example">Example</h2>
+<p>The following is the <code>exp</code> example from class.</p>
+<pre><code>
+%token <string> Id_token
+%token Left_parenthesis Right_parenthesis
+%token Times_token Divide_token
+%token Plus_token Minus_token
+%token EOL
+%start main
+%type <expr> main
+%%
+exp:
+   term                                   \{ Term_as_Expr $1 \}
+ | term Plus_token exp                    \{ Plus_Expr ($1, $3) \}
+ | term Minus_token exp                   \{ Minus_Expr ($1, $3) \}
+term:
+   factor                                 \{ Factor_as_Term $1 \}
+ | factor Times_token term                \{ Mult_Term ($1, $3) \}
+ | factor Divide_token term               \{ Div_Term ($1, $3) \}
+factor:
+   Id_token                               \{ Id_as_Factor $1 \}
+ | Left_parenthesis exp Right_parenthesis \{ Parenthesized_Expr_as_Factor $2 \}
+main:
+ exp EOL                                  \{ $1 \}
+</code></pre>
+<p>Recall from lecture that the process of transforming program code (i.e, as ASCII text) into an <em>abstract syntax tree</em> (AST) has two parts. First, the <em>lexical analyzer</em> (lexer) scans over the text of the program and converts the text into a sequence of <em>tokens</em>. The type of tokens in general may be a preexisting OCaml type, or a user-defined type created for the purpose. In the case where <em>ocamlyacc</em> is used, the type should be named <code>token</code> and the datatype <code>token</code> is created implicitly by the <code>%token</code> directives. These tokens are then fed into the <em>parser</em> created by entry points in your input, which builds the actual AST.</p>
+<p>The first five lines in the example above define the sorts of tokens of the language. These directives are converted by <em>ocamlyacc</em> into an OCaml variant type declaration defining the type <code>token</code>. Notice that the <code>Id_token</code> token has data associated with it. (This corresponds to writing <code>type token = …| Id_token of string</code> in OCaml.)  The sixth line says that the start symbol for the grammar is the nonterminal called <code>main</code>. After the <code>%%</code> directive comes the important part: the productions. The format of the productions is fairly self-explanatory. The above specification describes the following extended BNF grammar:</p>
+<p><span class="math display">\[\begin{array}{lll}
+S ::= E\ \textbf{eol} \\[.5ex]
+E ::= T &amp;|\ T + E &amp;|\ T - E\\[.5ex]
+T ::= F &amp;|\ F * T &amp;|\ F / T\\[.5ex]
+F ::= id &amp;|\ (E)\\
+\end{array}\]</span></p>
+<p>An important fact about <em>ocamlyacc</em> is that <strong>each production returns a value</strong> that is to be put on the stack. We call this the <em>semantic value</em> of the production. It is described in curly braces by the <em>semantic action</em>. The semantic action is actual OCaml code that will be evaluated when this parsing algorithm reduces by this production. The result of this code is the semantic value, and it is placed on the stack to represent the nonterminal.</p>
+<p>What do ${\tt \$1}$, ${\tt \$2}$, etc., mean? These refer to the positional values on the stack, and are replaced in the OCaml code by the semantic values of the subexpressions on the right-hand side of the production. Thus, the symbol ${\tt\$1}$ refers to the semantic value of the first subexpression on the right-hand side, the symbol ${\tt\$2}$ refers to the semantic value of the second subexpression on the right-hand side (not just the secon nonterminal), and so on. As an example, consider the following production:</p>
+<pre><code>    exp:
+     ...
+     | term Plus_token exp                    { Plus_Expr ($1, $3) }</code></pre>
+<p>When the parser reduces by this rule, ${\tt $1}$ holds the semantic value of the <code>term</code> subexpression, and $\{\tt $3}$ holds the value of the <code>exp</code> subexpression. The semantic rule generates the AST representing the addition of the two, and the result becomes the semantic value for this production and is put on the stack to replace the top three items.</p>
+<p>Also note that when tokens have associated data (like <code>Id_token</code>, which has a string), that associated data is treated as the semantic value of the token:</p>
+<pre><code>    factor:
+       Id_token                               { Id_as_Factor $1 }
+</code></pre>
+<p>Thus, the above ${\tt $1}$ corresponds to the string component of the token, and not the token itself.</p>
+<h2 id="more-information">More Information</h2>
+<p>Here is a website you should check out if you would like more information or an alternate explanation of <em>ocamlyacc</em> usage:</p>
+<ul>
+<li><p><a href="https://ocaml.org/manual/lexyacc.html">https://ocaml.org/manual/lexyacc.html</a><br />
+</p></li>
+</ul>
+</details>
+<h1 id="compiling">Compiling</h1>
+<details><summary>Using the Interactive PicoML Environment To Test Your Code</summary>
+<p>A <code>Makefile</code> is provided for this assignment. After you make changes to <code>parse.mly</code>, all you have to do is type <code>make</code> (or possibly <code>gmake</code> if you are using a non-linux machine) and the three needed executables will be rebuilt.  More files than usual are built, but those files include the file <code>./grader</code>, which you should use as in the past to help look for errors.  You should also look at <code>parse.output</code> to see if you have shift/reduce or reduce/reduce errors.  To help you further understand the nature of your errors, the <code>Makefile</code> wil also create <code>picomlIntPar</code> and <code>picomlIntParSol</code> to help you see more in depth how you are parsing gven code, and how the solution is.</p>
+<h2 id="running-picoml">Running PicoML</h2>
+<p>The given <code>Makefile</code> builds executables called <code>picomlIntPar</code> and <code>picomlIntParSol</code>. The first is an executable for an interactive loop for the parser built from your solution to the assignment, and the second is one built from the standard solution. If you run <code>./picomlIntPar</code> or <code>./picomlIntParSol</code>, you will get an interactive screen, much like the OCaml interactive screen. You can type in PicoML expressions followed by a double semicolon, and they will be parsed and their types inferred and displayed:</p>
+<pre><code>Welcome to the Solution parser
+
+&gt; 3;;
+val _ : int
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= 3 : int
+
+&gt; let x = 3 + 4;;
+val x : int
+
+final environment:
+
+{x : int}
+
+proof:
+
+  {} |= let x = 3  +  4 in x : int
+  |--{} |= 3  +  4 : int
+  | |--{} |= 3 : int
+  | |--{} |= 4 : int
+  |--{x : int} |= x : int
+
+&gt; let f = fun y -&gt; y * x;;
+val f : int -&gt; int
+
+final environment:
+
+{f : int -&gt; int,x : int}
+
+proof:
+
+  {x : int} |= let f = fun y -&gt; y  *  x in f : int -&gt; int
+  |--{x : int} |= fun y -&gt; y  *  x : int -&gt; int
+  | |--{y : int,x : int} |= y  *  x : int
+  |   |--{y : int,x : int} |= y : int
+  |   |--{y : int,x : int} |= x : int
+  |--{f : int -&gt; int,x : int} |= f : int -&gt; int
+
+&gt; f 5;;
+val _ : int
+
+final environment:
+
+{f : int -&gt; int,x : int}
+
+proof:
+
+  {f : int -&gt; int,x : int} |= f 5 : int
+  |--{f : int -&gt; int,x : int} |= f : int -&gt; int
+  |--{f : int -&gt; int,x : int} |= 5 : int
+</code></pre>
+<p><strong>Note:</strong> your output might have different type variables than those shown in subsequent examples.</p>
+<p>Notice the accumulation of values in the (type) environment as expressions are entered. To reset the environment, you must quit the program (with CTRL+C) and start again.</p>
+</details>
+<h1 id="important-notes">Important Notes</h1>
+<details><summary><b>Read This!</b></summary>
+<div style="border:black; border-width:3px; border-style:outset;">
+<ul>
+
+<li>
+The BNF below for PicoML's grammar is ambiguous, and it is just a
+description of the <em>concrete</em> syntax of PicoML.  You are also
+provided with a table listing the associativity/precedence attributes
+of the various language constructs.  You are supposed to use the
+information given in this table in order to create a grammar that
+generates the same language as the given one, but that is unambiguous
+and enforces the constructs to be specified as in the table.  Your
+actual <em>ocamlyacc</em> specification will consist of the latter
+grammar.
+</li>
+<li>
+<h4><b>
+The BNF does not show the stratification needed to eliminate
+ambiguity. That is your job!
+</b></h4>
+This will likely involve reorganizing things.
+</li>
+<li>
+<em>ocamlyacc</em> has some shortcut directives (<tt>%left</tt>,
+<tt>%right</tt>) for defining operator precedence.  <bf>You may not
+use them in this assignment.</bf> Ambiguity should be resolved by
+stratifying the grammar, and our solution takes this approach.
+</li>
+<li>
+Even though the work in this assignment is split into several
+problems, you should really have the overall view on how the
+disambiguated grammar will look because precedence makes the choices
+for the productions corresponding to the language constructs
+conceptually interdependent.  You might want to read through all the
+expression types first and try to organize your stratification layers
+before starting.  90% of your intellectual effort in this assignment
+will consist of disambiguating the grammar properly.
+</li>
+<li>
+<b> You will lose points for shift/reduce and reduce/reduce conflicts
+in your grammar.  </b> Reduce/reduce conflicts will be penalized more
+heavily.  Running <tt>ocamlyacc -v parse.mly</tt> will inform you of
+any conflicts in your grammar, and produce a file
+<tt>parse.output</tt> giving the action and goto table information and
+details of how conflicts arise and which productions are involved.
+</li>
+</ul>
+</div>
+
+<p>Stratification means breaking something up into layers. In the example <a href="#example" data-reference-type="ref" data-reference="example">4.1</a> (page ), we could have expressed the grammar more succinctly by</p>
+<p><span class="math display">\[\begin{array}{lll}
+S ::= E\ \textbf{eol} \\
+E ::= id\ \mid\ E + E\ \mid\ E - E\ \mid\ E * E\ \mid \ E / E\ \mid (E)\\
+\end{array}\]</span></p>
+<p>This grammar, while compact, and comprehensible to humans, is highly ambiguous for the purposes of parsing. To render it unambiguous, we introduced intermediate non-terminals (layers, or strata) to express associativity and precedence of operators. You will need to perform similar transformations on the description given here to remove ambiguities and avoid shift-reduce or reduce-reduce conflicts.</p>
+</details>
+<h1 id="probset">Problem Setting</h1>
+<details><summary>Overall Problem Definition</summary>
+<p>The concrete syntax of PicoML that you will need to parse is the following:</p>
+<pre><code>
+&lt;main&gt; ::= &lt;exp&gt; ;;
+        | let IDENT = &lt;exp&gt; ;;
+        | let rec IDENT IDENT = &lt;exp&gt; ;;
+
+&lt;exp&gt; ::= IDENT
+        | TRUE | FALSE | INT | FLOAT | STRING | NIL | UNIT
+        | ( )
+        | ( &lt;exp&gt; )
+        | ( &lt;exp&gt; , &lt;exp&gt; )
+        | let IDENT = &lt;exp&gt; in &lt;exp&gt;
+        | let rec IDENT IDENT = &lt;exp&gt; in &lt;exp&gt;
+        | &lt;exp&gt; &lt;binop&gt; &lt;exp&gt;
+        | &lt;monop&gt; &lt;exp&gt;
+        | &lt;exp&gt; &amp;&amp; &lt;exp&gt;
+        | &lt;exp&gt; || &lt;exp&gt;
+        | [ ]
+        | [ &lt;list_contents&gt; ]   /* sugar for non-empty lists, extra credit */
+        | if &lt;exp&gt; then &lt;exp&gt; else &lt;exp&gt;
+        | &lt;exp&gt; &lt;exp&gt;
+        | fun IDENT -&gt; &lt;exp&gt;
+        | raise &lt;exp&gt;
+        | try &lt;exp&gt; with n1 -&gt; e1 | ...   /* extra credit */
+
+&lt;binop&gt; ::= + | - | * | / | +. | -. | *. | /. | ^ | :: | &lt; | &gt;
+         | = | &gt;= | &lt;= | &lt;&gt; | mod | **
+
+&lt;monop&gt; ::= fst | snd | hd | tl | print_string | ~
+
+&lt;list_contents&gt; ::= &lt;nonempty sequence of expressions separated by semicolons&gt;</code></pre>
+<p><code>IDENT</code> refers to an identifier token (only one token, takes a string as argument). <code>&lt;binop&gt;</code> refers to some infix identifier token (one for each infix operator). Similarly, <code>&lt;monop&gt;</code> are the unary operators. The nonterminals in this grammar are <code>main</code>, <code>exp</code>, <code>binop</code>, <code>monop</code>, and <code>list_contents</code>, with <code>main</code> being the start symbol.</p>
+<p>The rest of the symbols are terminals, and their representations in OCaml are elements of the type <code>token</code>, defined at the beginning of the file <code>parse.mly</code>. Our OCaml representation of terminals is not always graphically identical to the one shown in the above gramar; we have used concrete syntax in place of tokens for the terminals. For example, <code>::</code> is represented by <code>DCOLON</code> and <code>+</code> by <code>PLUS</code>. Our OCaml representation of the identifier tokens (<code>IDENT</code>) is achieved by the constructor <code>IDENT</code> that takes a string and yields a token, as constructed by the lexer from the previous assignment.</p>
+<p>Some of productions in the above grammar do not have a corresponding direct representation in abstract syntax. These language constructs are syntactic sugar and are summarized in the following table.</p>
+<div class="center" style="border:black; border-width:1px; border-style:outset;">
+<table class=schedule border=0 cellpadding=2 cellspacing=5 rules=all width="100%">
+<thead>
+<tr class="header">
+<th style="text-align: left;"><em>Expression</em></th>
+<th style="text-align: left;"><em>Desugared form</em></th>
+<th style="text-align: left;"><em>Notes</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">x <code>&amp;&amp;</code> y</td>
+<td style="text-align: left;"><code>if</code> x <code>then</code> y <code>else false</code></td>
+<!--<td style="text-align: left;"></td>-->
+</tr>
+<tr class="even">
+<td style="text-align: left;">x <code>||</code> y</td>
+<td style="text-align: left;"><code>if</code> x <code>then true</code> <code>else</code> y</td>
+<!--<td style="text-align: left;"></td>-->
+</tr>
+<tr class="odd">
+<td style="text-align: left;">x <code>&lt;</code> y</td>
+<td style="text-align: left;">(y <code>&gt;</code> x)</td>
+<!--<td style="text-align: left;"></td>-->
+</tr>
+<tr class="even">
+<td style="text-align: left;">x <code>&lt;=</code> y</td>
+<td style="text-align: left;">(y <code>&gt;</code> x) <code>||</code> (x <code>=</code> y)</td>
+<td style="text-align: left;">with further expansion of ||</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">x <code>&gt;=</code> y</td>
+<td style="text-align: left;">(x <code>&gt;</code> y) <code>||</code> (x <code>=</code> y)</td>
+<td style="text-align: left;">with further expansion of ||</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">x <code>&lt;&gt;</code> y</td>
+<td style="text-align: left;"><code>if</code> (x <code>=</code> y) <code>then false else true</code></td>
+<!--<td style="text-align: left;"></td>-->
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>[]</code></td>
+<td style="text-align: left;"><code>NIL</code></td>
+<!--<td style="text-align: left;"></td>-->
+</tr>
+</tbody>
+</table>
+</div>
+<br/>
+<p>Recall that identifying the tokens of the language is the job of lexer, and the parser (that you have to write in this assignment) takes as input a <span><em>sequence of tokens</em></span>, such as <code>(INT 3) PLUS (INT 5)</code> and tries to make sense out of it by transforming it into an abstract syntax tree, in this case <code>BinOpAppExp(IntPlusOp, ConstExp(IntConst 3), ConstExp(IntConst 5))</code>.</p>
+<p>The abstract syntax trees into which you have to parse your sequences of tokens are given by the following OCaml types (metatypes, to avoid confusion with PicoML types), present in the file <code>common.ml</code>:</p>
+<div class="sourceCode" id="cb7" data-firstline="4" data-lastline="5" data-basicstyle="\tt"><pre class="sourceCode objective caml"><code class="sourceCode ocaml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> const = BoolConst <span class="kw">of</span> <span class="dt">bool</span> | IntConst <span class="kw">of</span> <span class="dt">int</span> | FloatConst <span class="kw">of</span> <span class="dt">float</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>           | StringConst <span class="kw">of</span> <span class="dt">string</span> | NilConst | UnitConst</span></code></pre></div>
+<div class="sourceCode" id="cb8" data-firstline="39" data-lastline="39" data-basicstyle="\tt"><pre class="sourceCode objective caml"><code class="sourceCode ocaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> mon_op = HdOp | TlOp | PrintOp | IntNegOp | FstOp | SndOp</span></code></pre></div>
+<div class="sourceCode" id="cb9" data-firstline="17" data-lastline="20" data-basicstyle="\tt"><pre class="sourceCode objective caml"><code class="sourceCode ocaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> bin_op = IntPlusOp | IntMinusOp | IntTimesOp | IntDivOp</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>           | FloatPlusOp | FloatMinusOp | FloatTimesOp | FloatDivOp </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>           | ConcatOp | ConsOp | CommaOp | EqOp | GreaterOp </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>           | ModOp | ExpoOp</span></code></pre></div>
+<div class="sourceCode" id="cb10" data-firstline="50" data-lastline="67" data-basicstyle="\tt"><pre class="sourceCode objective caml"><code class="sourceCode ocaml"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">exp</span> =  <span class="co">(* Exceptions will be added in later assignments *)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>   | VarExp <span class="kw">of</span> <span class="dt">string</span>                    <span class="co">(* variables *)</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>   | ConstExp <span class="kw">of</span> const                   <span class="co">(* constants *)</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>   | MonOpAppExp <span class="kw">of</span> mon_op * <span class="dt">exp</span>         <span class="co">(* % e1 for % is a builtin monadic operator *)</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>   | BinOpAppExp <span class="kw">of</span> bin_op * <span class="dt">exp</span> * <span class="dt">exp</span>   <span class="co">(* e1 % e2 for % is a builtin binary operator *)</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>   | IfExp <span class="kw">of</span> <span class="dt">exp</span> * <span class="dt">exp</span> * <span class="dt">exp</span>            <span class="co">(* if e1 then e2 else e3 *)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>   | AppExp <span class="kw">of</span> <span class="dt">exp</span> * <span class="dt">exp</span>                 <span class="co">(* e1 e2 *)</span> </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>   | FunExp <span class="kw">of</span> <span class="dt">string</span> * <span class="dt">exp</span>              <span class="co">(* fun x -&gt; e1 *)</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>   | LetInExp <span class="kw">of</span> <span class="dt">string</span> * <span class="dt">exp</span> * <span class="dt">exp</span>      <span class="co">(* let x = e1 in e2 *)</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>   | LetRecInExp <span class="kw">of</span> <span class="dt">string</span> * <span class="dt">string</span> * <span class="dt">exp</span> * <span class="dt">exp</span> <span class="co">(* let rec f x = e1 in e2 *)</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>   | RaiseExp <span class="kw">of</span> <span class="dt">exp</span>                            <span class="co">(* raise e *)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>   | TryWithExp <span class="kw">of</span> (<span class="dt">exp</span> * <span class="dt">int</span> <span class="dt">option</span> * <span class="dt">exp</span> * (<span class="dt">int</span> <span class="dt">option</span> * <span class="dt">exp</span>) <span class="dt">list</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>		                   <span class="co">(* try e with i -&gt; e1 | j -&gt; e1 | ... | k -&gt; en *)</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> dec =</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>     Anon <span class="kw">of</span> <span class="dt">exp</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>   | Let <span class="kw">of</span> <span class="dt">string</span> * <span class="dt">exp</span>                 <span class="co">(* let x = exp *)</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>   | LetRec <span class="kw">of</span> <span class="dt">string</span> * <span class="dt">string</span> * <span class="dt">exp</span>     <span class="co">(* let rec f x = exp *)</span></span></code></pre></div>
+<p>Thus each sequence of tokens should either be interpreted as an element of metatype <code>exp</code> or <code>dec</code>, or should yield a parse error. Note that the metatypes <code>exp</code> and <code>dec</code> contain abstract, and not concrete syntax.</p>
+<p>Notice that here we discuss how to parse <span><em>sequences of items</em></span>, and not the original text that the PicoML programmer writes - thus, while programming in PicoML one writes <code>3 + 5</code>, which will be lexed to <code>(INT 3) PLUS (INT 5)</code>, and then parsed to the form of abstract syntax tree as shown above.</p>
+<p>If we do not specify the precedence and associativity of our language constructs and operators, the parsing function is not well-defined. For instance, how should <code>if true then 3 else 2 + 4</code> be parsed? Depending on how we "read" the above sequence of tokens, we get different results:</p>
+<ul>
+<li><p>If we read it as the sum of a conditional and a number, we get the same thing as if it were: <code>(if true then 3 else 2) + 4</code></p></li>
+<li><p>If we read it as a conditional having a sum in its false branch, we get <code>if true then 3 else (2 + 4)</code></p></li>
+</ul>
+<p>The question is really which of the sum and the conditional binds its arguments tighter; that is, which one has a higher precedence (or which one has precedence over the other). In the first case, the conditional construct has a higher precedence whereas in the second, the sum operator has a higher precedence.</p>
+<p>Another source of ambiguity arises from associativity of operators: how should <code>true</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>true</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>false</code> be parsed?</p>
+<ul>
+<li><p>If we read it as the conjunction between true and a conjunction, we get <code>true</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>(true</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>false)</code></p></li>
+<li><p>If we read it as a conjunctions between a conjunction and false, we get <code>(true</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>true)</code> <span class="math inline">\(\verb+&amp;&amp;+\)</span> <code>false</code></p></li>
+</ul>
+<p>In the first case, <code>&amp;&amp;</code> is right-associative; in the second, it is left-associative.</p>
+<p>The desired precedence and associativity of the language constructs and operators (which impose a unique parsing function) are given below, where a left-associative operator is in a row preceded by "<b>left</b>:", a right-associative operator is in a row preceded by "<b>right:</b>", and precedence decreases downwards on the lines (thus two items listed on the same line have the same precedence).</p>
+<pre><code>
+<b>left:</b> fst _  snd _  hd _  tl _  print_string _  ~ _
+<b>left:</b>  _ _ (application is left associative, and bind tighter than anything
+                   else, except monop application)
+<b>none:</b> raise _ 
+<b>right:</b> _ ** _
+<b>left:</b>  _ * _   _ *. _   _ / _   _ /. _   _ mod _
+<b>left:</b>  _ + _   _ +. _   _ - _   _ -. _   _ ^ _
+<b>right:</b> _ :: _  (:: is right associative, binds tighter than anything but the above)
+<b>left:</b>  _ = _   _ &lt; _   _ &gt; _   _ &lt;= _   _ &gt;= _    _ &lt;&gt; _
+<b>left:</b>  _ &amp;&amp; _
+<b>left:</b>  _ || _
+<b>none:</b> if _ then _ else _
+<b>none:</b> fun _ -&gt; _
+<b>none:</b> let _ = _ in _
+<b>none:</b> let rec _ = _ in _
+<b>none:</b> try _ with _ -&gt; _ | _ -&gt; _ |  _ -&gt; _ ..., where | is right associative
+</code></pre>
+<!--
+<pre><code>
+fst _   snd _   hd _   tl _   print_string _  ~ _
+left _ _    (application is left associative, and binds tighter than anything
+             else, except monop application)
+raise _
+right **
+left *  left *.  left /  left /. left mod
+left +  left +.  left -  left -.  left ^
+right ::   (:: is right associative, binds tighter than anything but the above)
+left =  left &lt;  left &gt;  left &lt;=  left &gt;=  left &lt;&gt;
+left _ &amp;&amp; _
+left _ || _
+if _ then _ else _
+fun _ -&gt; _
+let _ = _ in _
+let rec _ = _ in _
+try _ with _ -&gt; _ | _ | _ ..., where | is right associative
+</code></pre> -->
+<p>Above, the underscores are just a graphical indication of the places where the various syntactic constructs expect their “arguments". For example, the conditional has three underscores, the first for the condition, the second for the <code>then</code> branch, and the third for the <code>else</code> branch.</p>
+</details>

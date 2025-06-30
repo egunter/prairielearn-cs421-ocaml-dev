@@ -1,0 +1,25 @@
+<div class="problem">
+<p>Add syntactic sugar for lists to your expressions. More precisely, add the following expressions to the grammar:</p>
+<ul>
+<li><p><span class="math inline">\([ \textit{list\_contents} ]\)</span></p></li>
+</ul>
+<p>where <em>list_contents</em> is a non-empty sequence of expressions separated by semicolons. It has to be the case that semicolon binds less tightly than any other language construct or operator.</p>
+<pre><code>&gt; [1; 2; 3];;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = 1  ::  (2  ::  (3  ::  [])) : {}
+  |--{} |= 1  ::  (2  ::  (3  ::  [])) : int list
+    |--{} |= 1 : int
+    |--{} |= 2  ::  (3  ::  []) : int list
+      |--{} |= 2 : int
+      |--{} |= 3  ::  [] : int list
+        |--{} |= 3 : int
+        |--{} |= [] : int list
+</code></pre>
+</div>

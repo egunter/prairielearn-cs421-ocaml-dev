@@ -1,0 +1,22 @@
+<div class="problem">
+<p>Add application.</p>
+<pre><code>&gt; (fun x -&gt; x + x + 3) 4;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = (fun x -&gt; (x  +  x)  +  3) 4 : {}
+  |--{} |= (fun x -&gt; (x  +  x)  +  3) 4 : int
+    |--{} |= fun x -&gt; (x  +  x)  +  3 : int -&gt; int
+    | |--{x : int} |= (x  +  x)  +  3 : int
+    |   |--{x : int} |= x  +  x : int
+    |   | |--{x : int} |= x : int
+    |   | |--{x : int} |= x : int
+    |   |--{x : int} |= 3 : int
+    |--{} |= 4 : int
+</code></pre>
+</div>

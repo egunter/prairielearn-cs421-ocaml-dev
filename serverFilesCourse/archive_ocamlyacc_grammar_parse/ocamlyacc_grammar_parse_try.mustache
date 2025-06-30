@@ -1,0 +1,22 @@
+<div class="problem">
+<p>Add <code>try_with_</code>. Be sure to notice how the expression is parsed in the example: pipes are associated with the right-most preceding <code>try-with</code> (the ambiguity this fixes is analogous to the ambiguity in the dangling-else problem when you have both an <tt>if_then_else_ </tt> and an <tt>if_then_</tt>.)</p>
+<p>Valid patterns have the form <code>n -&gt; e</code>, where <code>n</code> is to be represented by <code>Some</code> wrapped around an integer, or <code>_ -&gt; e</code>, where <code>_</code> is represented is to be represented by <code>None</code>.</p>
+<pre><code>&gt; try 0 with 1 -&gt; 1 | 2 -&gt; try 2 with _ -&gt; 3 | 4 -&gt; 4;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = try 0 with 1 -&gt; 1 | 2 -&gt; try 2 with _ -&gt; 3 | 4 -&gt; 4 : {}
+  |--{} |= try 0 with 1 -&gt; 1 | 2 -&gt; try 2 with _ -&gt; 3 | 4 -&gt; 4 : int
+    |--{} |= 0 : int
+    |--{} |= 1 : int
+    |--{} |= try 2 with _ -&gt; 3 | 4 -&gt; 4 : int
+      |--{} |= 2 : int
+      |--{} |= 3 : int
+      |--{} |= 4 : int
+</code></pre>
+</div>

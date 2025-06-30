@@ -1,0 +1,21 @@
+<div class="problem">
+<p>Add <code>raise</code>.</p>
+<pre><code>&gt; raise (fun x -&gt; x) 4 + 3;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = (raise (fun x -&gt; x) 4)  +  3 : {}
+  |--{} |= (raise (fun x -&gt; x) 4)  +  3 : int
+    |--{} |= raise (fun x -&gt; x) 4 : int
+    | |--{} |= (fun x -&gt; x) 4 : int
+    |   |--{} |= fun x -&gt; x : int -&gt; int
+    |   | |--{x : int} |= x : int
+    |   |--{} |= 4 : int
+    |--{} |= 3 : int
+</code></pre>
+</div>

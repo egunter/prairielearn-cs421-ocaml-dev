@@ -1,0 +1,19 @@
+<div class="problem">
+<p>Add infix operators. You will need to heed the precedence and associativity rules given in the table above.</p>
+<pre><code>&gt; 3 + 4 * 8;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = 3  +  (4  *  8) : {}
+  |--{} |= 3  +  (4  *  8) : int
+    |--{} |= 3 : int
+    |--{} |= 4  *  8 : int
+      |--{} |= 4 : int
+      |--{} |= 8 : int
+</code></pre>
+</div>

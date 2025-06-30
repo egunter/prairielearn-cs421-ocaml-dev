@@ -1,0 +1,16 @@
+<div class="problem">
+<p>Add pairs. Note that unlike OCaml, PicoML requires opening and closing parentheses around pairs.</p>
+<pre><code>&gt; (&quot;hi&quot;,3);;
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = (&quot;hi&quot; , 3) : {}
+  |--{} |= (&quot;hi&quot; , 3) : string * int
+    |--{} |= &quot;hi&quot; : string
+    |--{} |= 3 : int
+</code></pre>
+</div>

@@ -1,0 +1,92 @@
+
+Welcome to the Picoml Evaluation Environment Tester 
+
+In the following, you will be given a series of declarations
+together with the output OCaml would print.  After each declaration,
+you are asked to type in the environment in effect after all the
+declarations up to that point have been executed.
+
+
+2 = 1 + 1;;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {}
+
+That is correct!
+let a = 10;;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10}
+
+That is correct!
+let x = 11 + a;;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, x -> 21}
+
+That is correct!
+let f y = x - y + a;;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, x -> 21}
+
+That is correct!
+let b = (f x) 
+  in 
+ (let a = 5 
+  in
+  a + b + x );;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, x -> 21}
+
+That is correct!
+let x = 1;;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, x -> 1}
+
+That is correct!
+let g u v = f (x + u - v);;
+
+
+Enter the resulting environment:
+> 
+Your answer was: Parse error in: {g-> < u->fun v->(-u+v+a), {f -> < y->x-y+a, {a->10, x -> 21} > , a->10, x -> 1} > , f -> < y->x-y+a, {a->10, x -> 21} > , a->10, x -> 1 }
+
+That is incorrect! (2 attemps remaining)
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, g -> <u -> fun v -> f ((x  +  u)  -  v), {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, x -> 1}>, x -> 1}
+
+That is correct!
+let f = (g 3 (f 5));;
+
+
+Enter the resulting environment:
+> 
+Your answer was: {a -> 10, f -> 53, g -> <u -> fun v -> f ((x  +  u)  -  v), {a -> 10, f -> <y -> (x  -  y)  +  a, {a -> 10, x -> 21}>, x -> 1}>, x -> 1}
+
+That is correct!
+
+Your final score on the problem is: 16
+
+
+Total: [16 / 16]
+
+Extra: [0 / 0]
+

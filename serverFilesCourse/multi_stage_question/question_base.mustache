@@ -1,0 +1,160 @@
+<style>
+  details.instructions {
+      border: 1px solid rgba(0, 0, 0, .125);
+      padding: .5em .5em 0;
+      margin-bottom: 15px;
+      background-color: rgba(0, 0, 0, .03);
+  }
+
+  .instructions summary {
+      font-weight: bold;
+      margin: -.5em -.5em 0;
+      padding: .5em;
+      outline: none;
+  }
+
+  details.instructions[open] {
+      padding: .5em;
+  }
+
+  details.instructions[open] summary {
+      border-bottom: 1px solid rgba(0, 0, 0, .125);
+      margin-bottom: .5em;
+  }
+  table.format th {
+  border: 1px solid rgba(0,0,0,.125);
+  padding: 10px;
+  text-align: center;
+}
+
+table.format td{
+  border: 1px solid rgba(0,0,0,.125);
+  padding: 8px;
+  text-align: left;
+}
+
+table.format td input {
+  text-align: left;
+}
+
+table.format td span.form-inline {
+  margin-left: 0 !important;
+}
+
+span.red-line-through {
+  position: relative;
+}
+
+span.red-line-through::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: red;
+}
+
+</style>
+
+<pl-question-panel>
+  <p>
+    Welcome to the Picoml Evaluation Environment Tester!
+  </p>
+  <p>
+    In the following, you will be given a series of declarations. After each declaration, you are asked to type in the environment in effect after all the declarations up to that point have been executed. You should assume you are starting in the empty environment.
+  </p>
+
+<details class="instructions rounded">
+
+
+  <summary>To define environments, use the following syntax:</summary>
+
+<ul>
+  <li>An <strong>environment</strong> is represented as a sequence of <em>comma-separated bindings</em> enclosed within curly braces <code>{ }</code>.</li>
+  <li>A <strong>binding</strong> consists of an identifier followed by <code>-></code> and its associated value.</li>
+</ul>
+
+<p>For closures, the syntax begins with <code>&lt;</code>, followed by the <strong>formal parameter</strong>, <code>-></code>, and the <strong>body of the closure</strong>. It ends with a comma and a closing <code>&gt;</code>.</p>
+
+<p><strong>Example 1: Defining an Environment</strong>
+
+An environment mapping <code>a</code> to <code>2</code> and <code>b</code> to <code>17</code> is written as:</p>
+<pre>{ a -> 2, b -> 17 }</pre>
+
+<p><strong>Example 2: Writing a Closure</strong>
+
+A closure representing the function <code>fun x -> x + a + b</code> with the above environment is written as:</p>
+<pre>&lt; x -> x + a + b, { a -> 2, b -> 17 } &gt;</pre>
+    </details>
+
+
+
+  <p>
+To do this question, for each OCaml declaration in the Code column, 
+you will put your work for that step in the corresponding text box provided in the Environment column.  Your answer should be the environment resulting from executing all declarations in the Code column to that point.  Once you have entered your answer for a given step, <b><b> you must push Save & Grade </b></b> to move on to the next step.  You will be told whether your answer is correct or not, and what your revised grade is.  Your work up to that point will then be saved and, if your last work was right, you will progress to the next step, if you were not already at the last step.  If your last attempt was wrong, you will be allowed to try again.  After $3$ wrong attempts, you will be told the correct answer, and you will move to the next step.
+</p>
+<p><b>
+      You have $3$ attempts at each step for this question. The number of allowed submissions is higher because invalid formatting errors will not count towards your attempt for any given step.
+      </b>
+  </p>
+
+  <table class='format' style="border: 2px solid black; width: 100%;">
+    <tr>
+      <th scope="col">Code</th>
+      <th scope="col">Environment</th>
+    </tr>
+    
+    {{#stages}}
+  {{#is_finished}}
+    <tr>
+      <td><pre>{{code}}</pre></td>
+      <td>
+        {{#is_correct}}
+          <span class="text-success">{{student_answer}}</span>
+        {{/is_correct}}
+        {{^is_correct}}
+          {{#student_answer}}
+            <span class="red-line-through">{{student_answer}}</span><br>
+          {{/student_answer}}
+          <span class="text-success">{{correct_env}}</span>
+        {{/is_correct}}
+      </td>
+    </tr>
+  {{/is_finished}}
+  {{#is_current}}
+  <tr>
+    <td><pre>{{code}}</pre></td>
+    <td>
+      <pl-string-input answers-name="{{current_stage_num}}-answer" show-help-text=false size="100" remove-spaces="false" placeholder="Type the environment here" multiline="true"></pl-string-input>
+      {{#attempts}}
+        <br>
+        <span class="text-danger" style="font-weight: bold;">Incorrect! You have {{attempts_left}} attempts left.</span>
+      {{/attempts}}
+    </td>
+  </tr>
+  {{/is_current}}
+{{/stages}}
+
+
+  </table>
+
+  {{#is_done}}
+    <p><strong>You have completed the question.</strong></p>
+  {{/is_done}}
+
+</pl-question-panel>
+
+<pl-submission-panel>
+  {{^is_done}}
+  <p>{{feedback}}</p>
+  {{/is_done}}
+</pl-submission-panel>
+
+<pl-answer-panel>
+  {{#is_done}}
+  <p>You have completed the question.</p>
+  {{/is_done}}
+</pl-answer-panel>
+
+

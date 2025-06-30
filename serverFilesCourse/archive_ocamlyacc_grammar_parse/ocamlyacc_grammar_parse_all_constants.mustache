@@ -1,0 +1,16 @@
+<div class="problem">
+<p>(5 pts) In the file <code>parse.mly</code>, add the integer, unit, boolean, float, and string constants.</p>
+<p>Below is an example for string constants; the parsing of other constants should be the same; only their specific values and types inferred will differ. 
+<pre><code>&gt; &quot;hi&quot;;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = &quot;hi&quot; : {}
+  |--{} |= &quot;hi&quot; : string
+</code></pre>
+</div>

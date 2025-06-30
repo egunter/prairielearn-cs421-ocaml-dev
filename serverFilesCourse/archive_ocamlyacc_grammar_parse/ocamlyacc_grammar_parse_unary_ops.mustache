@@ -1,0 +1,16 @@
+<div class="problem">
+<p>Add unary operators. These should be treated for precedence and associativity as an application of single argument functions.</p>
+<pre><code>&gt; hd [];;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = hd [] : {}
+  |--{} |= hd [] : &#39;c
+    |--{} |= [] : &#39;c list
+</code></pre>
+</div>

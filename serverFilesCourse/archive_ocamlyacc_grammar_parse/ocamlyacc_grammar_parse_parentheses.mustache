@@ -1,0 +1,14 @@
+<div class="problem">
+<p> Add parentheses.</p>
+<pre><code>&gt; (&quot;hi&quot;);;
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = &quot;hi&quot; : {}
+  |--{} |= &quot;hi&quot; : string
+</code></pre>
+</div>

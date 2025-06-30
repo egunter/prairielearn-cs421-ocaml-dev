@@ -1,0 +1,20 @@
+<div class="problem">
+<p><!--<span id="iffnprob" label="iffnprob">[iffnprob]</span> (20 pts)-->Add <code>fun_-&gt;_</code> and <code>if_then_else_</code>.</p>
+<pre><code>&gt; if true then fun x -&gt; 3 else fun x -&gt; 4;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = if true then fun x -&gt; 3 else fun x -&gt; 4 : {}
+  |--{} |= if true then fun x -&gt; 3 else fun x -&gt; 4 : &#39;c -&gt; int
+    |--{} |= true : bool
+    |--{} |= fun x -&gt; 3 : &#39;c -&gt; int
+    | |--{x : &#39;c} |= 3 : int
+    |--{} |= fun x -&gt; 4 : &#39;c -&gt; int
+      |--{x : &#39;c} |= 4 : int
+</code></pre>
+</div>

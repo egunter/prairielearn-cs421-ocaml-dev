@@ -1,0 +1,21 @@
+<div class="problem">
+<p>Add <span class="math inline">\(\verb+&amp;&amp;+\)</span> and <span class="math inline">\(\verb+||+\)</span>.</p>
+<pre><code>&gt; true || false &amp;&amp; true;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = if true then true else if false then true else false : {}
+  |--{} |= if true then true else if false then true else false : bool
+    |--{} |= true : bool
+    |--{} |= true : bool
+    |--{} |= if false then true else false : bool
+      |--{} |= false : bool
+      |--{} |= true : bool
+      |--{} |= false : bool
+</code></pre>
+</div>

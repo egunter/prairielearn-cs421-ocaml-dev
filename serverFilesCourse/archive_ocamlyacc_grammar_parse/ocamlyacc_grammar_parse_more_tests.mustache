@@ -1,0 +1,61 @@
+
+<ol>
+<li><p>Can you pass this test? Make sure your parser parses the expression as in the example.</p>
+<pre><code>&gt; 3 - 4 - 2 * 9 &lt; 10 &amp;&amp; true ;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = if 10  &gt;  ((3  -  4)  -  (2  *  9)) then true else false : {}
+  |--{} |= if 10  &gt;  ((3  -  4)  -  (2  *  9)) then true else false : bool
+    |--{} |= 10  &gt;  ((3  -  4)  -  (2  *  9)) : bool
+    | |--{} |= 10 : int
+    | |--{} |= (3  -  4)  -  (2  *  9) : int
+    |   |--{} |= 3  -  4 : int
+    |   | |--{} |= 3 : int
+    |   | |--{} |= 4 : int
+    |   |--{} |= 2  *  9 : int
+    |     |--{} |= 2 : int
+    |     |--{} |= 9 : int
+    |--{} |= true : bool
+    |--{} |= false : bool
+</code></pre></li>
+<li><p>This one?</p>
+<pre><code>&gt; if true then 1 else 0 + 2;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = if true then 1 else 0  +  2 : {}
+  |--{} |= if true then 1 else 0  +  2 : int
+    |--{} |= true : bool
+    |--{} |= 1 : int
+    |--{} |= 0  +  2 : int
+      |--{} |= 0 : int
+      |--{} |= 2 : int
+</code></pre></li>
+<li><p>How about this one?</p>
+<pre><code>&gt; (fun x -&gt; ()) 3;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = (fun x -&gt; ()) 3 : {}
+  |--{} |= (fun x -&gt; ()) 3 : unit
+    |--{} |= fun x -&gt; () : int -&gt; unit
+    | |--{x : int} |= () : unit
+    |--{} |= 3 : int
+</code></pre></li>
+</ol>

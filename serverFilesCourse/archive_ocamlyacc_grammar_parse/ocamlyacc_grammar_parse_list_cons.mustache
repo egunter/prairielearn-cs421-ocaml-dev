@@ -1,0 +1,21 @@
+<div class="problem">
+<p>Add :: (list consing).</p>
+<pre><code>&gt; 3 :: 2 :: 1 :: [];;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = 3  ::  (2  ::  (1  ::  [])) : {}
+  |--{} |= 3  ::  (2  ::  (1  ::  [])) : int list
+    |--{} |= 3 : int
+    |--{} |= 2  ::  (1  ::  []) : int list
+      |--{} |= 2 : int
+      |--{} |= 1  ::  [] : int list
+        |--{} |= 1 : int
+        |--{} |= [] : int list
+</code></pre>
+</div>

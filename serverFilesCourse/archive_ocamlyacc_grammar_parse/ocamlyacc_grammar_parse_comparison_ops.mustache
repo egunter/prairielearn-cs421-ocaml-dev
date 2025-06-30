@@ -1,0 +1,17 @@
+<div class="problem">
+<p>Add comparison operators.</p>
+<pre><code>&gt; 3 &lt; 5;;
+
+
+final environment:
+
+{}
+
+proof:
+
+  {} |= let _ = 5  &gt;  3 : {}
+  |--{} |= 5  &gt;  3 : bool
+    |--{} |= 5 : int
+    |--{} |= 3 : int
+</code></pre>
+</div>
